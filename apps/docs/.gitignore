@@ -1,0 +1,5 @@
+/.next/
+/.source/
+/content/docs/
+next-env.d.ts
+/out/

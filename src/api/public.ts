@@ -25,3 +25,6 @@ export type {
 } from './types';
 
 export { isChildAttribute } from './validate';
+
+export { example, isExample } from './example';
+export type { ExampleSpec } from './example';
