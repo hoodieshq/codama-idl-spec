@@ -118,7 +118,7 @@ export interface MarkupRenderer {
     paragraph(content: string): string;
     table(head: readonly string[], rows: readonly (readonly string[])[]): string; // padded GitHub-style
     codeBlock(language: string, code: string): string;
-    list(ordered: boolean, items: readonly string[]): string;
+    list(type: 'bulleted' | 'numbered', items: readonly string[]): string;
     code(value: string): string;
     link(text: string, href: string): string;
     bold(content: string): string;
