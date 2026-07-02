@@ -1,14 +1,15 @@
 import { markdownTable } from 'markdown-table';
 
-import type { MarkupRenderer } from '../types';
+import type { ListItem, MarkupRenderer } from '../types';
+import { LIST_INDENT, LIST_LINE_SEPARATOR } from './constants';
 
 /**
  * The default markdown renderer.
  * Tables are padded (columns aligned, `>= 3` dashes).
  *
  * Note: this renderer is hand-rolled on purpose to stay dependency-free.
- * Markdown libraries are intentionally avoided until they are needed.
- * Revisit this decision if the renderer grows
+ * Markdown libraries are intentionally avoided until they are needed. (currently only markdownTable is used)
+ * Revisit this decision if the renderer grows.
  * */
 export const markdownRenderer: MarkupRenderer = {
     heading(level, content) {
@@ -33,7 +34,7 @@ export const markdownRenderer: MarkupRenderer = {
         return `_${content}_`;
     },
     list(type, items) {
-        return items.map((item, index) => `${type === 'numbered' ? `${index + 1}.` : '-'} ${item}`).join('\n');
+        return renderList(type, items, 0);
     },
     codeBlock(language, code) {
         // block fence must be >= 3 backticks and longer than any run in code
@@ -51,6 +52,22 @@ export const markdownRenderer: MarkupRenderer = {
 /** Escape characters that would otherwise break a markdown table cell (bare pipes read as column separators). */
 function escapeCell(cell: string): string {
     return cell.replace(/\|/g, '\\|');
+}
+
+/** Renders a (possibly nested) list, indenting each level by 4 spaces per markdown's nested-bullet convention. */
+function renderList(type: 'bulleted' | 'numbered', items: readonly ListItem[], depth: number): string {
+    const indent = LIST_INDENT.repeat(depth);
+    return items
+        .map((item, index) => {
+            const marker = type === 'numbered' ? `${index + 1}.` : '-';
+            // leaf, or a node with no children -> a plain line
+            if (typeof item === 'string' || item.children.length === 0) {
+                const content = typeof item === 'string' ? item : item.content;
+                return `${indent}${marker} ${content}`;
+            }
+            return `${indent}${marker} ${item.content}${LIST_LINE_SEPARATOR}${renderList(type, item.children, depth + 1)}`;
+        })
+        .join(LIST_LINE_SEPARATOR);
 }
 
 /** Backtick fence at least `min` long and longer than any backtick run in content, so content cannot close it early. */

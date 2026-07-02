@@ -70,18 +70,6 @@ export function buildNavigation(pathConfig: PathConfig, spec: Spec): Navigation 
     return { root, categories };
 }
 
-/** `categoryDir` value meaning "the docs root": a category with no folder of its own. */
-const DOCS_ROOT_DIR = '';
-
-/**
- * Whether a category is rendered into its own subfolder, and so gets its own category-index page.
- * A `DOCS_ROOT_DIR` result means the category has no folder of its own.
- * And its entities live at the root and fold into the root index instead of getting a separate index page.
- */
-export function hasOwnDirectory(pathConfig: PathConfig, category: CategorySpec): boolean {
-    return pathConfig.categoryDir(category) !== DOCS_ROOT_DIR;
-}
-
 /** A category's pages: each `categoryGroups` group in order, alphabetical within the group. */
 export function groupCategoryPages(category: CategorySpec): DocRef[] {
     return categoryGroups(category).flatMap(group => {
@@ -106,6 +94,22 @@ export function categoryGroups(category: CategorySpec): CategoryGroup[] {
             items: toCategoryGroupItems('enumeration', category.enumerations, enumeration => enumeration.name),
         },
     ];
+}
+
+/** `categoryDir` value meaning "the docs root": a category with no folder of its own. */
+const DOCS_ROOT_DIR = '';
+
+/**
+ * Whether a category is rendered into its own subfolder, and so gets its own category-index page.
+ * `categoryDir` returns `DOCS_ROOT_DIR` for the docs root: such a category (e.g. topLevel) has no folder of its own,
+ * so its entities live at the root and fold into the root index instead of getting a separate index page.
+ *
+ * @example
+ * hasOwnDirectory(LocalDocsPathConfig, pdaSeedCategory); // true  -> 'pdaSeedNodes/README' index page
+ * hasOwnDirectory(LocalDocsPathConfig, topLevelCategory); // false -> listed inline in the root index
+ */
+export function hasOwnDirectory(pathConfig: PathConfig, category: CategorySpec): boolean {
+    return pathConfig.categoryDir(category) !== DOCS_ROOT_DIR;
 }
 
 function toCategoryGroupItems<T extends { docs?: readonly string[] }>(

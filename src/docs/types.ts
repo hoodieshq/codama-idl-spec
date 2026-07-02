@@ -112,13 +112,16 @@ export interface PathConfig {
 /** Computes the href from one page to another, given both nav entries. */
 export type LinkStrategy = (from: NavEntry, to: NavEntry) => string;
 
+/** A list item: a leaf line, or a line with a nested sub-list. */
+export type ListItem = string | { readonly content: string; readonly children: readonly ListItem[] };
+
 /** Markup renderer interface for documentation - each method renders one block. */
 export interface MarkupRenderer {
     heading(level: number, content: string): string;
     paragraph(content: string): string;
     table(head: readonly string[], rows: readonly (readonly string[])[]): string; // padded GitHub-style
     codeBlock(language: string, code: string): string;
-    list(type: 'bulleted' | 'numbered', items: readonly string[]): string;
+    list(type: 'bulleted' | 'numbered', items: readonly ListItem[]): string;
     code(value: string): string;
     link(text: string, href: string): string;
     bold(content: string): string;
