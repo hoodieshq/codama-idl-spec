@@ -16,3 +16,11 @@ A single (key, value) pair inside a `mapValueNode`.
 | --------- | ----------------------------- | ---------------- |
 | `key`     | [`ValueNode`](./ValueNode.md) | The entry key.   |
 | `value`   | [`ValueNode`](./ValueNode.md) | The entry value. |
+
+## Examples
+
+### Create a map entry value node from a key and a value
+
+```typescript
+const node = mapEntryValueNode(stringValueNode('total'), numberValueNode(42));
+```
