@@ -6,7 +6,6 @@ import { markdownRenderer } from '../../src/docs/render/markdown';
 import type { RenderCtx } from '../../src/docs/render/renderPages';
 import { renderEnumPage, renderNodePage } from '../../src/docs/render/renderPages';
 
-/** A minimal RenderCtx over the real markdown renderer - lookup returns fixed path segments, links resolve to '#'. */
 function makeCtx(): RenderCtx {
     const registry: NavRegistry = {
         entries: [],
