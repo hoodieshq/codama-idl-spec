@@ -3,13 +3,16 @@ import { describe, expect, it } from 'vitest';
 import type { EnumerationSpec, NodeSpec } from '../../api';
 import { relativeLinks } from '../links';
 import { LocalDocsPathConfig } from '../pathConfig';
-import type { DocRef, NavRegistry } from '../types';
+import type { DocConfig, DocRef, NavRegistry } from '../types';
 import { markdownRenderer } from './markdown';
 import type { RenderCtx } from './renderPages';
 import { renderEnumPage, renderNodePage } from './renderPages';
 
-/** A minimal RenderCtx over the real markdown renderer - lookup returns fixed path segments, links resolve to '#'. */
-function makeCtx(): RenderCtx {
+/**
+ * A minimal RenderCtx over the real markdown renderer - lookup returns fixed path segments, links resolve to '#'.
+ * `languages` is left undefined by default, matching the render-every-language config default.
+ */
+function makeCtx(config?: Pick<DocConfig, 'languages'>): RenderCtx {
     const registry: NavRegistry = {
         entries: [],
         lookup: (ref: DocRef) => ({ ref, pathSegments: ['generated', 'page'] }),
@@ -17,7 +20,7 @@ function makeCtx(): RenderCtx {
     return {
         markup: markdownRenderer,
         registry,
-        config: { pathConfig: LocalDocsPathConfig, linkStrategy: relativeLinks('md') },
+        config: { pathConfig: LocalDocsPathConfig, linkStrategy: relativeLinks('md'), languages: config?.languages },
         link: () => '#',
     };
 }
@@ -56,6 +59,55 @@ describe('renderNodePage', () => {
         // the raw union body is `"left" | "right"`; inside a table cell the pipe must be escaped as `\|`
         expect(page.content).toContain('"left" \\| "right"');
         expect(page.content).not.toContain('"left" | "right"');
+    });
+});
+
+describe('renderNodePage examples', () => {
+    /** A node carrying one example with both a TypeScript and a Rust code block. */
+    const node: NodeSpec = {
+        kind: 'amountTypeNode',
+        attributes: [],
+        examples: [
+            {
+                title: 'a u32 USD amount',
+                code: [
+                    { language: 'typescript', content: ["amountTypeNode(numberTypeNode('u32'), 2, 'USD');"] },
+                    { language: 'rust', content: ['amount_type_node(number_type_node(U32), 2, "USD");'] },
+                ],
+            },
+        ],
+    };
+
+    it('renders every language block when config.languages is undefined', () => {
+        const page = renderNodePage(node, makeCtx(undefined));
+
+        expect(page.content).toContain('## Examples');
+        expect(page.content).toContain('### a u32 USD amount');
+        expect(page.content).toContain("amountTypeNode(numberTypeNode('u32'), 2, 'USD');");
+        expect(page.content).toContain('amount_type_node(number_type_node(U32), 2, "USD");');
+    });
+
+    it('keeps only the code blocks whose language is in config.languages', () => {
+        const page = renderNodePage(node, makeCtx({ languages: ['typescript'] }));
+
+        expect(page.content).toContain('### a u32 USD amount');
+        expect(page.content).toContain("amountTypeNode(numberTypeNode('u32'), 2, 'USD');");
+        expect(page.content).not.toContain('amount_type_node(number_type_node(U32), 2, "USD");');
+    });
+
+    it('omits an example entirely when config.languages filters out all of its code blocks', () => {
+        // the example ships only typescript+rust; restricting to a third language leaves no blocks
+        const rustOnlyNode: NodeSpec = {
+            kind: 'tsOnlyNode',
+            attributes: [],
+            examples: [{ title: 'ts snippet', code: [{ language: 'typescript', content: ['tsOnly();'] }] }],
+        };
+
+        const page = renderNodePage(rustOnlyNode, makeCtx({ languages: ['rust'] }));
+
+        // no surviving code blocks -> the whole Examples section is dropped
+        expect(page.content).not.toContain('## Examples');
+        expect(page.content).not.toContain('ts snippet');
     });
 });
 

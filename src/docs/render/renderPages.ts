@@ -1,6 +1,9 @@
 import type {
     AttributeSpec,
     CategorySpec,
+    CodeLanguage,
+    DocExample,
+    DocExamples,
     EnumerationSpec,
     NestedUnionSpec,
     NodeSpec,
@@ -71,6 +74,10 @@ export function renderNodePage(node: NodeSpec, ctx: RenderCtx): DocPage {
         childRows.length
             ? `${markup.heading(3, 'Children')}${BLOCK_SEPARATOR}${markup.table(cols, childRows)}`
             : undefined,
+        // injection: afterAttributes (e.g. TS-specific Functions from spec-generators)
+        ctx.config.inject?.(createInjectContext('afterAttributes')),
+        // Examples section
+        renderExamples(node.examples, markup, ctx.config.languages),
         // injection: end
         ctx.config.inject?.(createInjectContext('end')),
     ];
@@ -79,6 +86,42 @@ export function renderNodePage(node: NodeSpec, ctx: RenderCtx): DocPage {
         pathSegments: ctx.registry.lookup(ref).pathSegments,
         content: parts.filter(Boolean).join(BLOCK_SEPARATOR),
     };
+}
+
+/**
+ * Render all Node examples.
+ * `languages` filters which lang block to render (all when undefined).
+ */
+function renderExamples(
+    examples: DocExamples,
+    markup: MarkupRenderer,
+    languages: readonly CodeLanguage[] | undefined,
+): string | undefined {
+    const rendered = examples
+        .map(example => renderExample(example, markup, languages))
+        .filter(block => block !== undefined);
+    if (!rendered.length) return undefined;
+    return [markup.heading(2, 'Examples'), ...rendered].join(BLOCK_SEPARATOR);
+}
+
+/** Render each example. */
+function renderExample(
+    example: DocExample,
+    markup: MarkupRenderer,
+    languages: readonly CodeLanguage[] | undefined,
+): string | undefined {
+    // languages specify which code langs should be included.
+    const codeBlocks = example.code.filter(block => languages === undefined || languages.includes(block.language));
+    if (!codeBlocks.length) return undefined;
+    const parts: (string | undefined)[] = [
+        // header
+        markup.heading(3, example.title),
+        // description
+        renderSpecDocs(example.docs, markup),
+        // code blocks
+        ...codeBlocks.map(code => markup.codeBlock(code.language, code.content.join('\n'))),
+    ];
+    return parts.filter(Boolean).join(BLOCK_SEPARATOR);
 }
 
 export function renderUnionPage(union: UnionSpec, ctx: RenderCtx): DocPage {

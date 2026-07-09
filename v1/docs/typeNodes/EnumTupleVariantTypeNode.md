@@ -18,3 +18,11 @@ A variant of an enum that carries a tuple payload (positional fields).
 | --------- | ---------------------------------------------------------------------------------- | --------------------------------------------------------- |
 | `tuple`   | [`NestedTypeNode`](./NestedTypeNode.md)<[`TupleTypeNode`](./TupleTypeNode.md)>     | The tuple of positional fields carried by the variant.    |
 | `display` | [`EnumVariantDisplayNode`](../displayNodes/EnumVariantDisplayNode.md) _(optional)_ | Display metadata describing how the variant is presented. |
+
+## Examples
+
+### Create a tuple enum variant type node from a name and a tuple
+
+```typescript
+const node = enumTupleVariantTypeNode('coordinates', tupleTypeNode([numberTypeNode('u32'), numberTypeNode('u32')]));
+```

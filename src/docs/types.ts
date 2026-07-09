@@ -1,4 +1,4 @@
-import type { CategorySpec, EnumerationSpec, NestedUnionSpec, NodeSpec, Spec, UnionSpec } from '../api';
+import type { CategorySpec, CodeLanguage, EnumerationSpec, NestedUnionSpec, NodeSpec, Spec, UnionSpec } from '../api';
 
 /** Configuration for the docs generator */
 export interface DocConfig {
@@ -10,6 +10,8 @@ export interface DocConfig {
     readonly root?: { readonly title: string; readonly description: string };
     /** Hook for injecting extra markup to a page via defined slots. */
     readonly inject?: InjectContent;
+    /** Define which languages should be included. Render every language by default. */
+    readonly languages?: readonly CodeLanguage[];
 }
 
 /**
@@ -137,7 +139,7 @@ export type InjectContent = (ctx: {
 }) => string | undefined;
 
 /** Where injected content is placed within a page body. */
-export type InjectionSlot = 'afterDescription' | 'end';
+export type InjectionSlot = 'afterAttributes' | 'afterDescription' | 'end';
 
 /** The current page as a discriminated spec subject - same kinds as DocRef. */
 export type InjectPage =

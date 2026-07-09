@@ -136,6 +136,50 @@ describe('generateDocs - absolute links', () => {
     });
 });
 
+describe('generateDocs - examples', () => {
+    function content(languages?: readonly ('typescript' | 'rust')[]): string {
+        const model = generateDocs(SPEC, {
+            pathConfig: LocalDocsPathConfig,
+            linkStrategy: relativeLinks('md'),
+            languages,
+        });
+        return nodePage(model, 'numberTypeNode').content;
+    }
+
+    it('renders an Examples section after Attributes, one h3 per case', () => {
+        const c = content();
+        expect(c.indexOf('## Attributes')).toBeLessThan(c.indexOf('## Examples'));
+        expect(c).toContain('### u32 integers');
+        expect(c).toContain("```typescript\nnumberTypeNode('u32');\n```");
+    });
+    it('renders optional prose between the title and the code, matching space-joined docs', () => {
+        const c = content();
+        expect(c.indexOf('### cross-language')).toBeLessThan(c.indexOf('Shown in both languages.'));
+        expect(c.indexOf('Shown in both languages.')).toBeLessThan(c.indexOf("```typescript\nnumberTypeNode('u8');"));
+    });
+    it('stacks one fenced block per language with mapped fence tags', () => {
+        const c = content();
+        expect(c).toContain("```typescript\nnumberTypeNode('u8');\n```");
+        expect(c).toContain('```rust\nnumber_type_node(U8);\n```');
+    });
+    it('filters to the requested languages and drops examples left with no block', () => {
+        const rust = content(['rust']);
+        // the ts-only "u32 integers" example is dropped; the cross-language one keeps its rust block
+        expect(rust).not.toContain('### u32 integers');
+        expect(rust).toContain('### cross-language');
+        expect(rust).toContain('```rust\nnumber_type_node(U8);\n```');
+        expect(rust).not.toContain('```typescript');
+    });
+    it('omits the whole section when no example has a matching language', () => {
+        const programNode = generateDocs(SPEC, {
+            pathConfig: LocalDocsPathConfig,
+            linkStrategy: relativeLinks('md'),
+        });
+        // programNode has no examples at all
+        expect(nodePage(programNode, 'programNode').content).not.toContain('## Examples');
+    });
+});
+
 describe('generateDocs - injection slots', () => {
     const inject: InjectContent = ({ page, slot, markup, linkTo }) => {
         if (slot === 'afterDescription' && page.kind === 'node' && page.node.kind === 'constantPdaSeedNode') {
@@ -168,6 +212,21 @@ describe('generateDocs - injection slots', () => {
         expect(() =>
             generateDocs(SPEC, { pathConfig: LocalDocsPathConfig, linkStrategy: relativeLinks('md'), inject: bad }),
         ).toThrow('Unresolved DocRef: node:nope');
+    });
+    it('places afterAttributes content between the Attributes tables and the Examples section', () => {
+        const injectFns: InjectContent = ({ page, slot, markup }) => {
+            return slot === 'afterAttributes' && page.kind === 'node' && page.node.kind === 'numberTypeNode'
+                ? markup.heading(2, 'Functions')
+                : undefined;
+        };
+        const model = generateDocs(SPEC, {
+            pathConfig: LocalDocsPathConfig,
+            linkStrategy: relativeLinks('md'),
+            inject: injectFns,
+        });
+        const content = nodePage(model, 'numberTypeNode').content;
+        expect(content.indexOf('## Attributes')).toBeLessThan(content.indexOf('## Functions'));
+        expect(content.indexOf('## Functions')).toBeLessThan(content.indexOf('## Examples'));
     });
     it('injects into a non-node page (category index) via the discriminated page subject', () => {
         const injectCat: InjectContent = ({ page, slot, markup }) => {
