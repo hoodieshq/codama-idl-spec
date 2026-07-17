@@ -39,7 +39,7 @@ describe('generateDocs - node pages (local + relative)', () => {
     });
     it('renders title, Data with a synthesized kind row, and code-wrapped Children links', () => {
         const content = nodePage(model, 'constantPdaSeedNode').content;
-        expect(content.startsWith('# `ConstantPdaSeedNode`')).toBe(true);
+        expect(content.startsWith('# ConstantPdaSeedNode')).toBe(true);
         expect(content).toContain('### Data');
         expect(content).toContain('`"constantPdaSeedNode"`');
         expect(content).toContain('### Children');
@@ -62,19 +62,19 @@ describe('generateDocs - non-node page types', () => {
 
     it('union page: abstract member list', () => {
         const content = pageOfKind(model, 'union', 'typeNode').content;
-        expect(content.startsWith('# `TypeNode` (abstract)')).toBe(true);
+        expect(content.startsWith('# TypeNode (abstract)')).toBe(true);
         expect(content).toContain('One of the following:');
         expect(content).toContain('- [`NumberTypeNode`](./NumberTypeNode.md)');
     });
     it('nestedUnion page: Base + Wrappers', () => {
         const content = pageOfKind(model, 'nestedUnion', 'nestedTypeNode').content;
-        expect(content.startsWith('# `NestedTypeNode` (recursive)')).toBe(true);
+        expect(content.startsWith('# NestedTypeNode (recursive)')).toBe(true);
         expect(content).toContain('Base: [`TypeNode`]');
         expect(content).toContain('## Wrappers');
     });
     it('enumeration page: Variants list', () => {
         const content = pageOfKind(model, 'enumeration', 'numberFormat').content;
-        expect(content.startsWith('# `NumberFormat`')).toBe(true);
+        expect(content.startsWith('# NumberFormat')).toBe(true);
         expect(content).toContain('## Variants');
     });
     it('category index: PascalCased heading + grouped lists', () => {
