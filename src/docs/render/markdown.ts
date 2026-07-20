@@ -47,6 +47,11 @@ export const markdownRenderer: MarkupRenderer = {
         }
         return markdownTable([head.map(escapeCell), ...rows.map(row => row.map(escapeCell))]);
     },
+    escape(value) {
+        // Escape the two mdx-significant chars (`<` opens JSX, `{` an expression) so output is safe as .md or .mdx.
+        // Callers apply this to prose only (never code spans, where a backslash would render literally).
+        return value.replace(/[<{]/g, '\\$&');
+    },
 };
 
 /** Escape characters that would otherwise break a markdown table cell (bare pipes read as column separators). */

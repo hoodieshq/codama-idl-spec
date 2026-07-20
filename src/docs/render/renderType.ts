@@ -13,7 +13,10 @@ export function renderType(t: TypeExpr, markup: MarkupRenderer, linkTo: (r: DocR
         case 'enumeration':
             return linkedEntity({ kind: 'enumeration', name: t.name }, markup, linkTo);
         case 'nestedUnion':
-            return `${linkedEntity({ kind: 'nestedUnion', name: t.alias }, markup, linkTo)}<${linkedEntity({ kind: 'node', name: t.name }, markup, linkTo)}>`;
+            return (
+                `${linkedEntity({ kind: 'nestedUnion', name: t.alias }, markup, linkTo)}${markup.escape('<')}` +
+                `${linkedEntity({ kind: 'node', name: t.name }, markup, linkTo)}${markup.escape('>')}`
+            );
         case 'anyNode':
             return markup.code('anyNode');
         case 'array':

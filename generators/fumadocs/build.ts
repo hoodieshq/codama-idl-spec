@@ -70,7 +70,7 @@ export function buildFumadocFiles(
     for (const page of model.pages) {
         const pathKey = page.pathSegments.join('/');
         const front = frontmatter({ title: page.title, description: page.description });
-        files.push({ path: `${pathKey}.md`, content: `${front}\n\n${page.content}\n` });
+        files.push({ path: `${pathKey}.mdx`, content: `${front}\n\n${page.content}\n` });
     }
 
     // per-folder label - the category index page (at `<folder>/<indexFileName>`) carries the PascalCase title

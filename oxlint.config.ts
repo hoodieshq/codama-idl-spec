@@ -4,6 +4,7 @@ const solanaConfig = require('@solana-config/oxc/oxlint');
 const ignorePatterns = [
     '**/dist/',
     'v[0-9]*/**',
+    'docs/**',
     '.changeset/**',
     'CHANGELOG.md',
     'pnpm-lock.yaml',

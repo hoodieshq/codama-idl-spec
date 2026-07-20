@@ -132,6 +132,13 @@ export interface MarkupRenderer {
     link(text: string, href: string): string;
     bold(content: string): string;
     italic(content: string): string;
+    /**
+     * Escape a raw prose string so the generated output is safe as both `.md` and `.mdx`.
+     * Neutralizes only the two mdx-significant chars - `<` (opens JSX) and `{` (opens an expression) -
+     * which are otherwise plain literal text in CommonMark. NOT a general markdown escaper: `>`, `[`, `*`,
+     * `_`, backticks, etc. are left live so prose still renders. Apply to prose only, never inside code spans.
+     */
+    escape(value: string): string;
 }
 
 /** Hook for injecting extra markup to a page via defined slots. */

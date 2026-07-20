@@ -77,4 +77,12 @@ describe('markdownRenderer', () => {
         // code contains a 3-backtick run: fence grows to 4
         expect(markdown.codeBlock('md', '```\nnested\n```')).toBe('````md\n```\nnested\n```\n````');
     });
+
+    it('escapes the mdx-significant characters < and { so output is safe as .md or .mdx', () => {
+        expect(markdown.escape('a < b and {x}')).toBe('a \\< b and \\{x}');
+    });
+    
+    it('leaves other characters untouched', () => {
+        expect(markdown.escape('u64 | string')).toBe('u64 | string');
+    });
 });

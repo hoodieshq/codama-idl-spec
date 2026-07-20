@@ -34,8 +34,8 @@ describe('frontmatter', () => {
 });
 
 describe('buildFumadocFiles', () => {
-    it('emits one .md per page, each opening with a title frontmatter', () => {
-        const md = FILES.filter(file => file.path.endsWith('.md'));
+    it('emits one .mdx per page, each opening with a title frontmatter', () => {
+        const md = FILES.filter(file => file.path.endsWith('.mdx'));
         expect(md).toHaveLength(docModel.pages.length);
         for (const file of md) {
             expect(file.content.startsWith('---\ntitle: "')).toBe(true);
@@ -58,10 +58,10 @@ describe('buildFumadocFiles', () => {
 
     it('emits extension-less spec links with no /index suffix', () => {
         const linkPattern = /\]\((\/spec\/v1[^)]*)\)/g;
-        for (const file of FILES.filter(f => f.path.endsWith('.md'))) {
+        for (const file of FILES.filter(f => f.path.endsWith('.mdx'))) {
             for (const match of file.content.matchAll(linkPattern)) {
                 expect(match[1].endsWith('/index'), `bad link ${match[1]} in ${file.path}`).toBe(false);
-                expect(match[1].endsWith('.md'), `bad link ${match[1]} in ${file.path}`).toBe(false);
+                expect(match[1].endsWith('.mdx'), `bad link ${match[1]} in ${file.path}`).toBe(false);
             }
         }
     });
@@ -77,7 +77,7 @@ describe('buildFumadocFiles', () => {
             }),
         );
         const linkPattern = /\]\((\/spec\/v1[^)]*)\)/g;
-        for (const file of FILES.filter(f => f.path.endsWith('.md'))) {
+        for (const file of FILES.filter(f => f.path.endsWith('.mdx'))) {
             for (const match of file.content.matchAll(linkPattern)) {
                 expect(urls.has(match[1]), `unresolved ${match[1]} in ${file.path}`).toBe(true);
             }
