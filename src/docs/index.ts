@@ -1,6 +1,6 @@
 export { generateDocs } from './generateDocs';
 export { absoluteLinks, relativeLinks } from './links';
-export { LocalDocsPathConfig } from './pathConfig';
+export { HostedDocsPathConfig, LocalDocsPathConfig } from './pathConfig';
 export { markdownRenderer } from './render/markdown';
 export type {
     DocConfig,

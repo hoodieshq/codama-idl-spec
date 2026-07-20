@@ -33,6 +33,10 @@ export type DocRefKey = `${DocRef['kind']}:${string}`;
 /** A single rendered page. */
 export interface DocPage {
     readonly ref: DocRef;
+    /** Human-facing page title - PascalCase entity name, or the configured root/category title. */
+    readonly title: string;
+    /** Short one-line summary - the entity's first doc paragraph, used for sidebar and SEO metadata. */
+    readonly description?: string;
     /** Example: ['pdaSeedNodes','ConstantPdaSeedNode']  */
     readonly pathSegments: readonly string[];
     /** The rendered body with resolved links */

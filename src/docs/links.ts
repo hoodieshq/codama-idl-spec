@@ -27,11 +27,18 @@ function commonPrefixLength(a: readonly string[], b: readonly string[]): number 
     return i;
 }
 
-/** Route-absolute links under `baseUrl`. */
-export function absoluteLinks(opts: { baseUrl: string; extension?: string }): LinkStrategy {
+/** Route-absolute links under `baseUrl`. `indexFileName` (when set) collapses a trailing index file to the folder URL. */
+export function absoluteLinks(opts: { baseUrl: string; extension?: string; indexFileName?: string }): LinkStrategy {
     const base = opts.baseUrl.replace(/\/+$/, '');
     const ext = normalizeDotExtension(opts.extension);
-    return (_from, to) => `${base}/${to.pathSegments.join('/')}${ext}`;
+    return (_from, to) => {
+        let segments = to.pathSegments;
+        if (opts.indexFileName && segments.length > 0 && segments[segments.length - 1] === opts.indexFileName) {
+            segments = segments.slice(0, -1);
+        }
+        const path = segments.join('/');
+        return path ? `${base}/${path}${ext}` : `${base}${ext}`;
+    };
 }
 
 /** Normalizes an optional extension to a leading-dot suffix ('' when absent): 'md' | '.md' -> '.md'. */

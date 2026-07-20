@@ -113,4 +113,15 @@ describe('absoluteLinks', () => {
             '/docs/v1/a/b.mdx',
         );
     });
+    it('collapses a trailing index segment to the folder URL when indexFileName is set', () => {
+        const abs = absoluteLinks({ baseUrl: '/spec', extension: '', indexFileName: 'index' });
+        expect(abs(entry(['index']), entry(['typeNodes', 'index']))).toBe('/spec/typeNodes');
+        expect(abs(entry(['index']), entry(['index']))).toBe('/spec');
+        expect(abs(entry(['index']), entry(['typeNodes', 'NumberTypeNode']))).toBe('/spec/typeNodes/NumberTypeNode');
+    });
+
+    it('leaves paths untouched when indexFileName is not set', () => {
+        const abs = absoluteLinks({ baseUrl: '/spec', extension: '' });
+        expect(abs(entry(['index']), entry(['typeNodes', 'index']))).toBe('/spec/typeNodes/index');
+    });
 });

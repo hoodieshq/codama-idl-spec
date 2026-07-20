@@ -83,6 +83,8 @@ export function renderNodePage(node: NodeSpec, ctx: RenderCtx): DocPage {
     ];
     return {
         ref,
+        title: pascalCase(node.kind),
+        description: node.docs?.[0],
         pathSegments: ctx.registry.lookup(ref).pathSegments,
         content: parts.filter(Boolean).join(BLOCK_SEPARATOR),
     };
@@ -148,6 +150,8 @@ export function renderUnionPage(union: UnionSpec, ctx: RenderCtx): DocPage {
     ];
     return {
         ref,
+        title: pascalCase(union.name),
+        description: union.docs?.[0],
         pathSegments: ctx.registry.lookup(ref).pathSegments,
         content: parts.filter(Boolean).join(BLOCK_SEPARATOR),
     };
@@ -177,6 +181,8 @@ export function renderNestedUnionPage(nestedUnion: NestedUnionSpec, ctx: RenderC
     ];
     return {
         ref,
+        title: pascalCase(nestedUnion.name),
+        description: nestedUnion.docs?.[0],
         pathSegments: ctx.registry.lookup(ref).pathSegments,
         content: parts.filter(Boolean).join(BLOCK_SEPARATOR),
     };
@@ -204,6 +210,8 @@ export function renderEnumPage(enumeration: EnumerationSpec, ctx: RenderCtx): Do
     ];
     return {
         ref,
+        title: pascalCase(enumeration.name),
+        description: enumeration.docs?.[0],
         pathSegments: ctx.registry.lookup(ref).pathSegments,
         content: parts.filter(Boolean).join(BLOCK_SEPARATOR),
     };
@@ -240,6 +248,8 @@ export function renderCategoryIndexPage(category: CategorySpec, ctx: RenderCtx):
     ];
     return {
         ref,
+        title: pascalCase(category.name),
+        description: category.docs?.[0],
         pathSegments: ctx.registry.lookup(ref).pathSegments,
         content: parts.filter(Boolean).join(BLOCK_SEPARATOR),
     };
@@ -285,6 +295,8 @@ export function renderRootIndexPage(spec: Spec, ctx: RenderCtx): DocPage {
     ];
     return {
         ref,
+        title,
+        description,
         pathSegments: ctx.registry.lookup(ref).pathSegments,
         content: parts.filter(Boolean).join(BLOCK_SEPARATOR),
     };

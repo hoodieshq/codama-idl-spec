@@ -60,6 +60,29 @@ describe('renderNodePage', () => {
         expect(page.content).toContain('"left" \\| "right"');
         expect(page.content).not.toContain('"left" | "right"');
     });
+
+    it('exposes a PascalCase title and the first doc paragraph as description', () => {
+        const node: NodeSpec = {
+            kind: 'numberValueNode',
+            docs: ['A literal number value.', 'A second paragraph that must be ignored.'],
+            attributes: [],
+            examples: [],
+        };
+
+        const page = renderNodePage(node, makeCtx());
+
+        expect(page.title).toBe('NumberValueNode');
+        expect(page.description).toBe('A literal number value.');
+    });
+
+    it('leaves description undefined when the node has no docs', () => {
+        const node: NodeSpec = { kind: 'bareNode', attributes: [], examples: [] };
+
+        const page = renderNodePage(node, makeCtx());
+
+        expect(page.title).toBe('BareNode');
+        expect(page.description).toBeUndefined();
+    });
 });
 
 describe('renderNodePage examples', () => {
@@ -127,5 +150,18 @@ describe('renderEnumPage', () => {
         // no docs -> bare label, no trailing ' - ' blurb
         expect(page.content).toContain('- `local`');
         expect(page.content).not.toContain('`local` -');
+    });
+
+    it('exposes a PascalCase title and the first doc paragraph as description', () => {
+        const enumeration: EnumerationSpec = {
+            name: 'valueScope',
+            docs: ['Where a value applies.'],
+            variants: [{ name: 'global' }],
+        };
+
+        const page = renderEnumPage(enumeration, makeCtx());
+
+        expect(page.title).toBe('ValueScope');
+        expect(page.description).toBe('Where a value applies.');
     });
 });

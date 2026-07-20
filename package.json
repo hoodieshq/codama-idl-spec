@@ -79,6 +79,7 @@
         "build": "rimraf dist && tsup && tsc -p ./tsconfig.declarations.json",
         "dev": "vitest",
         "generate": "pnpm build && tsx generators/index.ts",
+        "generate:spec-docs": "tsx generators/fumadocs/generate.ts",
         "lint": "oxlint && oxfmt --check .",
         "lint:fix": "oxlint --fix && oxfmt .",
         "test": "pnpm test:types && pnpm test:unit",
