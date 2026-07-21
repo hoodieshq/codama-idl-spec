@@ -12,10 +12,10 @@ A tagged union: a numeric discriminator followed by one of several variant paylo
 
 ### Children
 
-| Attribute  | Type                                                                             | Description                                           |
-| ---------- | -------------------------------------------------------------------------------- | ----------------------------------------------------- |
-| `variants` | [`EnumVariantTypeNode`](./EnumVariantTypeNode.md)[]                              | The variants of the enum, in declaration order.       |
-| `size`     | [`NestedTypeNode`](./NestedTypeNode.md)<[`NumberTypeNode`](./NumberTypeNode.md)> | The numeric type used to serialise the discriminator. |
+| Attribute  | Type                                                                              | Description                                           |
+| ---------- | --------------------------------------------------------------------------------- | ----------------------------------------------------- |
+| `variants` | [`EnumVariantTypeNode`](./EnumVariantTypeNode.md)[]                               | The variants of the enum, in declaration order.       |
+| `size`     | [`NestedTypeNode`](./NestedTypeNode.md)\<[`NumberTypeNode`](./NumberTypeNode.md)> | The numeric type used to serialise the discriminator. |
 
 ## Examples
 

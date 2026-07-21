@@ -12,9 +12,9 @@ A count strategy where the number of items is read from a numeric prefix.
 
 ### Children
 
-| Attribute | Type                                                                                                   | Description                                |
-| --------- | ------------------------------------------------------------------------------------------------------ | ------------------------------------------ |
-| `prefix`  | [`NestedTypeNode`](../typeNodes/NestedTypeNode.md)<[`NumberTypeNode`](../typeNodes/NumberTypeNode.md)> | The numeric type used as the count prefix. |
+| Attribute | Type                                                                                                    | Description                                |
+| --------- | ------------------------------------------------------------------------------------------------------- | ------------------------------------------ |
+| `prefix`  | [`NestedTypeNode`](../typeNodes/NestedTypeNode.md)\<[`NumberTypeNode`](../typeNodes/NumberTypeNode.md)> | The numeric type used as the count prefix. |
 
 ## Examples
 

@@ -13,10 +13,10 @@ A value that may be present or absent (Some/None), with an explicit numeric pref
 
 ### Children
 
-| Attribute | Type                                                                             | Description                                  |
-| --------- | -------------------------------------------------------------------------------- | -------------------------------------------- |
-| `item`    | [`TypeNode`](./TypeNode.md)                                                      | The type carried by the option when present. |
-| `prefix`  | [`NestedTypeNode`](./NestedTypeNode.md)<[`NumberTypeNode`](./NumberTypeNode.md)> | The numeric type used as the presence flag.  |
+| Attribute | Type                                                                              | Description                                  |
+| --------- | --------------------------------------------------------------------------------- | -------------------------------------------- |
+| `item`    | [`TypeNode`](./TypeNode.md)                                                       | The type carried by the option when present. |
+| `prefix`  | [`NestedTypeNode`](./NestedTypeNode.md)\<[`NumberTypeNode`](./NumberTypeNode.md)> | The numeric type used as the presence flag.  |
 
 ## Examples
 

@@ -16,7 +16,7 @@ A variant of an enum that carries a tuple payload (positional fields).
 
 | Attribute | Type                                                                               | Description                                               |
 | --------- | ---------------------------------------------------------------------------------- | --------------------------------------------------------- |
-| `tuple`   | [`NestedTypeNode`](./NestedTypeNode.md)<[`TupleTypeNode`](./TupleTypeNode.md)>     | The tuple of positional fields carried by the variant.    |
+| `tuple`   | [`NestedTypeNode`](./NestedTypeNode.md)\<[`TupleTypeNode`](./TupleTypeNode.md)>    | The tuple of positional fields carried by the variant.    |
 | `display` | [`EnumVariantDisplayNode`](../displayNodes/EnumVariantDisplayNode.md) _(optional)_ | Display metadata describing how the variant is presented. |
 
 ## Examples

@@ -12,9 +12,9 @@ A SOL amount expressed in lamports under the wrapped numeric type.
 
 ### Children
 
-| Attribute | Type                                                                             | Description                                            |
-| --------- | -------------------------------------------------------------------------------- | ------------------------------------------------------ |
-| `number`  | [`NestedTypeNode`](./NestedTypeNode.md)<[`NumberTypeNode`](./NumberTypeNode.md)> | The numeric type used to serialise the lamport amount. |
+| Attribute | Type                                                                              | Description                                            |
+| --------- | --------------------------------------------------------------------------------- | ------------------------------------------------------ |
+| `number`  | [`NestedTypeNode`](./NestedTypeNode.md)\<[`NumberTypeNode`](./NumberTypeNode.md)> | The numeric type used to serialise the lamport amount. |
 
 ## Examples
 

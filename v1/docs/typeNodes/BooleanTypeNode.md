@@ -12,9 +12,9 @@ A boolean serialised as a numeric value. The wrapped number type determines the 
 
 ### Children
 
-| Attribute | Type                                                                             | Description                                     |
-| --------- | -------------------------------------------------------------------------------- | ----------------------------------------------- |
-| `size`    | [`NestedTypeNode`](./NestedTypeNode.md)<[`NumberTypeNode`](./NumberTypeNode.md)> | The numeric type used to serialise the boolean. |
+| Attribute | Type                                                                              | Description                                     |
+| --------- | --------------------------------------------------------------------------------- | ----------------------------------------------- |
+| `size`    | [`NestedTypeNode`](./NestedTypeNode.md)\<[`NumberTypeNode`](./NumberTypeNode.md)> | The numeric type used to serialise the boolean. |
 
 ## Examples
 

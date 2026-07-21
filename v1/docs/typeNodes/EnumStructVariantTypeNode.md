@@ -16,7 +16,7 @@ A variant of an enum that carries a struct payload (named fields).
 
 | Attribute | Type                                                                               | Description                                               |
 | --------- | ---------------------------------------------------------------------------------- | --------------------------------------------------------- |
-| `struct`  | [`NestedTypeNode`](./NestedTypeNode.md)<[`StructTypeNode`](./StructTypeNode.md)>   | The struct of named fields carried by the variant.        |
+| `struct`  | [`NestedTypeNode`](./NestedTypeNode.md)\<[`StructTypeNode`](./StructTypeNode.md)>  | The struct of named fields carried by the variant.        |
 | `display` | [`EnumVariantDisplayNode`](../displayNodes/EnumVariantDisplayNode.md) _(optional)_ | Display metadata describing how the variant is presented. |
 
 ## Examples

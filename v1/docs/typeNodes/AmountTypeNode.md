@@ -14,9 +14,9 @@ Wraps a number type to provide additional context such as decimal places and a u
 
 ### Children
 
-| Attribute | Type                                                                             | Description                       |
-| --------- | -------------------------------------------------------------------------------- | --------------------------------- |
-| `number`  | [`NestedTypeNode`](./NestedTypeNode.md)<[`NumberTypeNode`](./NumberTypeNode.md)> | The number type the amount wraps. |
+| Attribute | Type                                                                              | Description                       |
+| --------- | --------------------------------------------------------------------------------- | --------------------------------- |
+| `number`  | [`NestedTypeNode`](./NestedTypeNode.md)\<[`NumberTypeNode`](./NumberTypeNode.md)> | The number type the amount wraps. |
 
 ## Examples
 
