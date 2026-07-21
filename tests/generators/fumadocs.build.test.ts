@@ -1,18 +1,9 @@
 import { describe, expect, it } from 'vitest';
 
-import { buildFumadocFiles, frontmatter } from '../../generators/fumadocs/build';
-import { absoluteLinks, generateDocs, HostedDocsPathConfig } from '../../src/docs';
-import { getSpec } from '../../src/v1';
+import { buildFumadocFiles, buildSpecModel, frontmatter } from '../../generators/fumadocs/build';
+import { HostedDocsPathConfig } from '../../src/docs';
 
-const docModel = generateDocs(getSpec(), {
-    pathConfig: HostedDocsPathConfig,
-    linkStrategy: absoluteLinks({
-        baseUrl: '/spec/v1',
-        extension: '',
-        indexFileName: HostedDocsPathConfig.indexFileName,
-    }),
-    root: { title: 'Codama Spec', description: 'The canonical Codama node specification.' },
-});
+const docModel = buildSpecModel('v1', HostedDocsPathConfig);
 const FILES = buildFumadocFiles(docModel, HostedDocsPathConfig.indexFileName, { root: true, title: 'v1.8.0' });
 const fileAt = (p: string) => FILES.find(file => file.path === p);
 const json = (p: string) => JSON.parse(fileAt(p)!.content);
@@ -47,13 +38,11 @@ describe('buildFumadocFiles', () => {
         expect(json('countNodes/meta.json')).toEqual({ title: 'Count' });
     });
 
-    it('marks the version root and lists folders before loose top-level pages', () => {
+    it('marks the version root and defers page order to Fumadocs, hiding the index', () => {
         const meta = json('meta.json');
         expect(meta.root).toBe(true);
         expect(meta.title).toBe('v1.8.0');
-        const pages: string[] = meta.pages;
-        expect(pages.indexOf('countNodes')).toBeGreaterThanOrEqual(0);
-        expect(pages.indexOf('AccountNode')).toBeGreaterThan(pages.indexOf('countNodes'));
+        expect(meta.pages).toEqual(['!index', '...']);
     });
 
     it('emits extension-less spec links with no /index suffix', () => {

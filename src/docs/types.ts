@@ -135,8 +135,9 @@ export interface MarkupRenderer {
     /**
      * Escape a raw prose string so the generated output is safe as both `.md` and `.mdx`.
      * Neutralizes only the two mdx-significant chars - `<` (opens JSX) and `{` (opens an expression) -
-     * which are otherwise plain literal text in CommonMark. NOT a general markdown escaper: `>`, `[`, `*`,
-     * `_`, backticks, etc. are left live so prose still renders. Apply to prose only, never inside code spans.
+     * which MDX treats as syntax, so escaping keeps them literal in both .md and .mdx.
+     * NOT a general markdown escaper: `>`, `[`, `*`, `_`, backticks, etc. are left live so prose still renders.
+     * Apply to prose only, never inside code spans (a backslash renders literally there).
      */
     escape(value: string): string;
 }

@@ -5,6 +5,12 @@ import { getSpec } from '../../src/v1';
 const SPEC_TITLE = 'Codama Spec';
 const SPEC_DESCRIPTION = 'The canonical Codama node specification.';
 
+/** The fumadocs version-root meta.json shape - `{ root: true, title: 'v1.8.0' }`. */
+interface RootMeta {
+    readonly root?: boolean;
+    readonly title?: string;
+}
+
 /**
  * Build a YAML frontmatter block.
  * Each value is JSON-encoded, which is a valid YAML double-quoted scalar for escaping quotes, colons, `#`, and newlines.
@@ -18,7 +24,8 @@ export function frontmatter(fields: Record<string, string | undefined>): string 
 
 /**
  * Build the hosted spec model - the single source of generator config, shared by `generate()` and any test.
- * `urlVersion` is the route version segment (`v1`); `pathConfig` decides file/dir names and the index basename.
+ * `urlVersion` is the route major version segment (`v1`).
+ * `pathConfig` decides file/dir names and the index basename.
  */
 export function buildSpecModel(urlVersion: string, pathConfig: PathConfig): DocModel {
     return generateDocs(getSpec(), {
@@ -33,38 +40,25 @@ export function buildSpecModel(urlVersion: string, pathConfig: PathConfig): DocM
 }
 
 /**
- * Build the version-root meta.json:
- * - caller `rootMeta` fields (root, title) first
- * - then category folders
- * - then loose top-level pages, both alphabetical.
+ * Build the version-root meta.json - `{ root, title, pages: ['!index', '...'] }`.
+ * `!index` hides the landing page from the sidebar, `...` lists every other page on Fumadocs' default sort.
  */
-function buildRootMetaFile(model: DocModel, indexFileName: string, rootMeta: Record<string, unknown>): DocFile {
-    const folders = [...new Set(model.pages.filter(p => p.pathSegments.length > 1).map(p => p.pathSegments[0]))].sort();
-    const loose = model.pages
-        .filter(p => p.pathSegments.length === 1 && p.pathSegments[0] !== indexFileName)
-        .map(p => p.pathSegments[0])
-        .sort();
-    const meta = { ...rootMeta, pages: [...folders, ...loose] };
+function buildRootMetaFile(rootMeta: RootMeta): DocFile {
+    const meta = { ...rootMeta, pages: ['!index', '...'] };
     return { path: 'meta.json', content: `${JSON.stringify(meta, null, 2)}\n` };
 }
 
 /**
- * Build the Fumadocs files from the spec model (Minimal + labels).
- * Paths are relative to the version root.
- * The caller writes them under `content/spec/v1` (gitignored, regenerated at predev/prebuild).
+ * Build the Fumadocs files from the spec model.
+ * Paths are relative to the major version root.
  * `indexFileName` is the PathConfig index basename - the trailing segment that marks a folder landing page.
- * - one `.md` per page (frontmatter + body)
- * - one `{ title }`-only `meta.json` per category folder, so the sidebar shows a clean label (i.e. `Count`, not
- *   `countNodes`).
- * Page order inside the folder is left to Fumadocs (alphabetical)
- * - one root `meta.json` (via `buildRootMetaFile`) merging `rootMeta` (the generator passes
- *   `{ root: true, title: 'v1.8.0' }` so the folder becomes a version-switcher root).
+ *
+ * Files emitted:
+ * - One mdx file per page (frontmatter + body)
+ * - A `meta.json` with only `{ title }` per category folder, so the sidebar shows `Count`, not `countNodes`.
+ * - A root `meta.json` - `{ root: true, title, pages: ['!index', '...'] }` so the folder is a version-switcher root.
  */
-export function buildFumadocFiles(
-    model: DocModel,
-    indexFileName: string,
-    rootMeta: Record<string, unknown> = {},
-): DocFile[] {
+export function buildFumadocFiles(model: DocModel, indexFileName: string, rootMeta: RootMeta = {}): DocFile[] {
     const files: DocFile[] = [];
 
     for (const page of model.pages) {
@@ -76,7 +70,7 @@ export function buildFumadocFiles(
     // per-folder label - the category index page (at `<folder>/<indexFileName>`) carries the PascalCase title
     for (const page of model.pages) {
         const segments = page.pathSegments;
-        if (segments.length === 2 && segments[1] === indexFileName) {
+        if (segments.length > 1 && segments[segments.length - 1] === indexFileName) {
             files.push({
                 path: `${segments[0]}/meta.json`,
                 content: `${JSON.stringify({ title: page.title }, null, 2)}\n`,
@@ -84,7 +78,7 @@ export function buildFumadocFiles(
         }
     }
 
-    files.push(buildRootMetaFile(model, indexFileName, rootMeta));
+    files.push(buildRootMetaFile(rootMeta));
 
     return files;
 }

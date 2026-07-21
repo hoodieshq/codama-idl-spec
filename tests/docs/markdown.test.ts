@@ -81,7 +81,7 @@ describe('markdownRenderer', () => {
     it('escapes the mdx-significant characters < and { so output is safe as .md or .mdx', () => {
         expect(markdown.escape('a < b and {x}')).toBe('a \\< b and \\{x}');
     });
-    
+
     it('leaves other characters untouched', () => {
         expect(markdown.escape('u64 | string')).toBe('u64 | string');
     });

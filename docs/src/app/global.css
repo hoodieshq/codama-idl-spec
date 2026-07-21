@@ -2,8 +2,6 @@
 @import 'fumadocs-ui/css/neutral.css';
 @import 'fumadocs-ui/css/preset.css';
 
-/* docs/src/app/global.css */
-
 @media (min-width: 768px) {
   #nd-sidebar {
     --fd-sidebar-width: 240px;

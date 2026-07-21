@@ -48,15 +48,16 @@ export const markdownRenderer: MarkupRenderer = {
         return markdownTable([head.map(escapeCell), ...rows.map(row => row.map(escapeCell))]);
     },
     escape(value) {
-        // Escape the two mdx-significant chars (`<` opens JSX, `{` an expression) so output is safe as .md or .mdx.
-        // Callers apply this to prose only (never code spans, where a backslash would render literally).
-        return value.replace(/[<{]/g, '\\$&');
+        // Prefix a backslash to the two mdx-significant chars: `<` opens JSX, `{` opens an expression.
+        // This renderer emits prose verbatim (via `paragraph`), so nothing else escapes these for us.
+        // Callers apply this to prose only, never code spans (a backslash renders literally there).
+        return value.replace(/[<{]/g, char => `\\${char}`);
     },
 };
 
 /** Escape characters that would otherwise break a markdown table cell (bare pipes read as column separators). */
 function escapeCell(cell: string): string {
-    return cell.replace(/\|/g, '\\|');
+    return cell.replace(/\|/g, char => `\\${char}`);
 }
 
 /** Renders a (possibly nested) list, indenting each level by 4 spaces per markdown's nested-bullet convention. */

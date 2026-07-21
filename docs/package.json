@@ -7,8 +7,8 @@
     "build": "next build",
     "start": "next start",
     "postinstall": "fumadocs-mdx",
-    "predev": "pnpm --dir .. run generate:spec-docs && fumadocs-mdx",
-    "prebuild": "pnpm --dir .. run generate:spec-docs && fumadocs-mdx",
+    "predev": "pnpm --dir .. run generate:app-docs && fumadocs-mdx",
+    "prebuild": "pnpm --dir .. run generate:app-docs && fumadocs-mdx",
     "types:check": "fumadocs-mdx && next typegen && tsc --noEmit"
   },
   "dependencies": {

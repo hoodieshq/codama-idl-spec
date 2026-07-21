@@ -17,7 +17,7 @@ pnpm dev
 
 Open http://localhost:3000 with your browser to see the result.
 
-The `content/spec/` reference is generated from the repo root by `pnpm generate:spec-docs` (run automatically on `predev`/`prebuild`) and is gitignored.
+The `content/spec/` reference is generated from the repo root by `pnpm generate:app-docs` via [generators/fumadocs](../generators/fumadocs/generate.ts) (run automatically on `predev`/`prebuild`) and is gitignored.
 
 ## Project structure
 

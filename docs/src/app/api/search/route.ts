@@ -1,27 +1,28 @@
 import { createSearchAPI } from 'fumadocs-core/search/server';
-import { docsSource, recipesSource, specSource } from '@/lib/source';
+// docs/recipes hidden for now - re-add their imports + index blocks below to restore.
+import { specSource } from '@/lib/source';
 
 // createFromSource only indexes one source, so build a combined advanced index
 // over all three collections. The `tag` lets the UI filter by section.
 export const { GET } = createSearchAPI('advanced', {
   language: 'english',
   indexes: [
-    ...docsSource.getPages().map((page) => ({
-      id: page.url,
-      url: page.url,
-      tag: 'docs',
-      title: page.data.title,
-      description: page.data.description,
-      structuredData: page.data.structuredData,
-    })),
-    ...recipesSource.getPages().map((page) => ({
-      id: page.url,
-      url: page.url,
-      tag: 'recipes',
-      title: page.data.title,
-      description: page.data.description,
-      structuredData: page.data.structuredData,
-    })),
+    // ...docsSource.getPages().map((page) => ({
+    //   id: page.url,
+    //   url: page.url,
+    //   tag: 'docs',
+    //   title: page.data.title,
+    //   description: page.data.description,
+    //   structuredData: page.data.structuredData,
+    // })),
+    // ...recipesSource.getPages().map((page) => ({
+    //   id: page.url,
+    //   url: page.url,
+    //   tag: 'recipes',
+    //   title: page.data.title,
+    //   description: page.data.description,
+    //   structuredData: page.data.structuredData,
+    // })),
     ...specSource.getPages().map((page) => ({
       id: page.url,
       url: page.url,

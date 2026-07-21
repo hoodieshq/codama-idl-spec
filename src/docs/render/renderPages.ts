@@ -53,7 +53,7 @@ export function renderNodePage(node: NodeSpec, ctx: RenderCtx): DocPage {
         const row = [
             markup.code(attribute.name),
             typeCell(attribute, markup, linkTo),
-            getFirstDoc(markup, attribute.docs),
+            markup.escape(getFirstDoc(attribute.docs)),
         ];
         if (isDocChild(attribute.type)) {
             childRows.push(row);
@@ -121,7 +121,7 @@ function renderExample(
     if (!codeBlocks.length) return undefined;
     const parts: (string | undefined)[] = [
         // header
-        markup.heading(3, example.title),
+        markup.heading(3, markup.escape(example.title)),
         // description
         renderSpecDocs(example.docs, markup),
         // code blocks
@@ -331,17 +331,18 @@ function typeCell(attribute: AttributeSpec, markup: MarkupRenderer, linkTo: (ref
 }
 
 /**
- * The short blurb for a table cell or list line - the first doc paragraph only, '' when there are none.
+ * The first doc paragraph, '' when there are none - selection only.
  * Only `docs[0]` is used on purpose: tables and lists want a one-line summary, so other paragraphs are dropped.
  * The full multi-paragraph docs still render on the entity's own page via `renderSpecDocs`.
  */
-function getFirstDoc(markup: MarkupRenderer, docs?: readonly string[]): string {
-    return docs?.[0] ? markup.escape(docs[0]) : '';
+function getFirstDoc(docs?: readonly string[]): string {
+    return docs?.[0] ?? '';
 }
 
-/** Appends a ` - <first doc paragraph>` suffix to a label (see `getFirstDoc`), or the bare label when there are none. */
+/** Appends a ` - <first doc paragraph>` suffix to a label, or the bare label when there are none. */
 function withBlurb(markup: MarkupRenderer, label: string, docs?: readonly string[]): string {
-    return docs?.[0] ? `${label} - ${getFirstDoc(markup, docs)}` : label;
+    const blurb = getFirstDoc(docs);
+    return blurb ? `${label} - ${markup.escape(blurb)}` : label;
 }
 
 /** Renders a spec `docs` field (a list of prose paragraphs) as a single space-joined paragraph, '' when empty. */

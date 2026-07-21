@@ -1,6 +1,12 @@
+import { readFileSync } from 'node:fs';
+
 import { createMDX } from 'fumadocs-mdx/next';
 
 const withMDX = createMDX();
+
+// Full spec version emitted by the generator (e.g. `1.8.0`) - derive the URL major (`v1`) for the /spec redirect.
+const { version } = JSON.parse(readFileSync(new URL('./spec-version.json', import.meta.url), 'utf8'));
+const major = `v${version.split('.')[0]}`;
 
 /** @type {import('next').NextConfig} */
 const config = {
@@ -20,8 +26,8 @@ const config = {
     ];
   },
   async redirects() {
-    // Bare /spec lands on the current spec major - bump when the spec major changes (rare).
-    return [{ source: '/spec', destination: '/spec/v1', permanent: false }];
+    // Bare /spec lands on the current spec major, read from the generated spec-version.json.
+    return [{ source: '/spec', destination: `/spec/${major}`, permanent: false }];
   },
 };
 

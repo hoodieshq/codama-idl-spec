@@ -13,8 +13,9 @@ export function baseOptions(): BaseLayoutProps {
       ),
     },
     links: [
-      { text: 'Documentation', url: '/docs' },
-      { text: 'Recipes', url: '/recipes' },
+      // Hidden until these sections have content - uncomment to restore.
+      // { text: 'Documentation', url: '/docs' },
+      // { text: 'Recipes', url: '/recipes' },
       { text: 'Spec', url: '/spec' },
     ],
   };

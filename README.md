@@ -89,7 +89,7 @@ generators/                # internal codegen orchestrator + per-target generato
   json-spec/               # emits v<n>/spec.json
   json-schema/             # emits v<n>/schema.json (stub)
   docs/                    # emits v<n>/docs/ (uses @codama/spec/docs)
-  fumadocs/                # emits docs/content/spec/<major>/ (via generate:spec-docs, uses @codama/spec/docs)
+  fumadocs/                # emits docs/content/spec/<major>/ (uses @codama/spec/docs)
 v1/                        # generated artifacts mirroring the @codama/spec/v1 surface
   spec.json
   schema.json

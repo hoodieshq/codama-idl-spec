@@ -83,6 +83,26 @@ describe('renderNodePage', () => {
         expect(page.title).toBe('BareNode');
         expect(page.description).toBeUndefined();
     });
+
+    it('escapes the mdx-significant chars < and { across every prose sink', () => {
+        const node: NodeSpec = {
+            kind: 'boundNode',
+            docs: ['Valid when width < 128.'],
+            attributes: [{ name: 'width', type: { kind: 'integer', width: 'u64' }, docs: ['The {width} field.'] }],
+            examples: [{ title: 'Using <T>', code: [{ language: 'typescript', content: ['boundNode();'] }] }],
+        };
+
+        const page = renderNodePage(node, makeCtx());
+
+        // body lead paragraph (renderSpecDocs), attribute Description cell (getFirstDoc), example heading (example.title)
+        expect(page.content).toContain('Valid when width \\< 128.');
+        expect(page.content).toContain('The \\{width} field.');
+        expect(page.content).toContain('### Using \\<T>');
+        // no raw, unescaped forms survive
+        expect(page.content).not.toContain('width < 128');
+        expect(page.content).not.toContain('The {width}');
+        expect(page.content).not.toContain('### Using <T>');
+    });
 });
 
 describe('renderNodePage examples', () => {
