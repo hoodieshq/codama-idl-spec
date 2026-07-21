@@ -1,45 +1,92 @@
 import { markdownTable } from 'markdown-table';
+import type { Heading, Html, List, ListItem as MdastListItem, Nodes, PhrasingContent } from 'mdast';
+import { fromMarkdown } from 'mdast-util-from-markdown';
+import { toMarkdown } from 'mdast-util-to-markdown';
+import type { Options } from 'mdast-util-to-markdown';
 
 import type { ListItem, MarkupRenderer } from '../types';
-import { LIST_INDENT, LIST_LINE_SEPARATOR } from './constants';
 
 /**
  * The default markdown renderer.
- * Tables are padded (columns aligned, `>= 3` dashes).
  *
- * Note: this renderer is hand-rolled on purpose to stay dependency-free.
- * Markdown libraries are intentionally avoided until they are needed. (currently only markdownTable is used)
- * Revisit this decision if the renderer grows.
- * */
+ * Block and inline formatting (headings, lists, code fence sizing, emphasis) is delegated to
+ * `mdast-util-to-markdown`. Tables stay on `markdown-table` to avoid pulling the micromark parser that the
+ * mdast GFM table extension depends on, and to keep table output byte-identical. Composed inline markup arrives
+ * pre-rendered, so it is injected as verbatim `html` nodes the serializer never touches. Escaping has two shapes:
+ * `prose` parses authored text as markdown (so code spans stay intact) and lets the serializer escape it, while
+ * `escapeChar` backslashes mdx-significant chars in renderer-generated delimiters. Options are pinned to the
+ * committed output; `unsafe` forces `<`/`{` in phrasing, which `prose` relies on and block serialization ignores.
+ */
+
+/** Serializer options pinned to the committed markdown style (`-` bullets, `_` italics, `**` bold, backtick fences). */
+const OPTIONS: Options = {
+    bullet: '-',
+    emphasis: '_',
+    fence: '`',
+    listItemIndent: 'one',
+    rule: '-',
+    strong: '*',
+    // `<` opens JSX and `{` an expression in mdx; core escapes neither in phrasing, so force both (prose only).
+    unsafe: [
+        { character: '<', inConstruct: 'phrasing' },
+        { character: '{', inConstruct: 'phrasing' },
+    ],
+};
+
+/** Serialize one node, dropping the single trailing newline that `toMarkdown` adds - `renderPages` joins blocks itself. */
+function serialize(node: Nodes): string {
+    return toMarkdown(node, OPTIONS).replace(/\n$/, '');
+}
+
+/** Wrap already-rendered inline markdown as a verbatim phrasing node so the serializer never escapes or reformats it. */
+function raw(value: string): Html {
+    return { type: 'html', value };
+}
+
+/** Build a (possibly nested) mdast list from the renderer's `ListItem` tree. */
+function toListNode(type: 'bulleted' | 'numbered', items: readonly ListItem[]): List {
+    return {
+        type: 'list',
+        ordered: type === 'numbered',
+        spread: false,
+        children: items.map(item => toListItemNode(type, item)),
+    };
+}
+
+/** Build one mdast list item: a tight paragraph, plus a nested list when the item has children. */
+function toListItemNode(type: 'bulleted' | 'numbered', item: ListItem): MdastListItem {
+    const content = typeof item === 'string' ? item : item.content;
+    const children: MdastListItem['children'] = [{ type: 'paragraph', children: [raw(content)] }];
+    if (typeof item !== 'string' && item.children.length) {
+        children.push(toListNode(type, item.children));
+    }
+    return { type: 'listItem', spread: false, children };
+}
+
 export const markdownRenderer: MarkupRenderer = {
     heading(level, content) {
-        return `${'#'.repeat(level)} ${content}`;
+        return serialize({ type: 'heading', depth: level as Heading['depth'], children: [raw(content)] });
     },
     paragraph(content) {
-        return content;
+        return serialize({ type: 'paragraph', children: [raw(content)] });
     },
     code(value) {
-        const fence = backtickFence(value, 1);
-        // pad when value starts/ends with a backtick - the renderer strips the single space
-        const pad = value.startsWith('`') || value.endsWith('`') ? ' ' : '';
-        return `${fence}${pad}${value}${pad}${fence}`;
+        return serialize({ type: 'inlineCode', value });
     },
     link(text, href) {
-        return `[${text}](${href})`;
+        return serialize({ type: 'link', url: href, children: [raw(text)] });
     },
     bold(content) {
-        return `**${content}**`;
+        return serialize({ type: 'strong', children: [raw(content)] });
     },
     italic(content) {
-        return `_${content}_`;
+        return serialize({ type: 'emphasis', children: [raw(content)] });
     },
     list(type, items) {
-        return renderList(type, items, 0);
+        return serialize(toListNode(type, items));
     },
     codeBlock(language, code) {
-        // block fence must be >= 3 backticks and longer than any run in code
-        const fence = backtickFence(code, 3);
-        return `${fence}${language}\n${code}\n${fence}`;
+        return serialize({ type: 'code', lang: language, value: code });
     },
     table(head, rows) {
         if (rows.some(row => row.length !== head.length)) {
@@ -47,41 +94,24 @@ export const markdownRenderer: MarkupRenderer = {
         }
         return markdownTable([head.map(escapeCell), ...rows.map(row => row.map(escapeCell))]);
     },
-    escape(value) {
-        // Prefix a backslash to the two mdx-significant chars: `<` opens JSX, `{` opens an expression.
-        // This renderer emits prose verbatim (via `paragraph`), so nothing else escapes these for us.
-        // Skip inline code spans: there `<`/`{` are already literal and a backslash would render visibly.
-        // split() captures the code spans, so prose lands on even indices and spans on odd - escape prose only.
-        return value
-            .split(/(`[^`]*`)/)
-            .map((part, i) => (i % 2 === 0 ? part.replace(/[<{]/g, char => `\\${char}`) : part))
-            .join('');
+    prose(markdown) {
+        // Parse as markdown so existing code spans stay intact, then re-serialize with `<` and `{` escaped.
+        // Demote inline HTML (`<T>`, `<Foo>`) back to literal text: CommonMark reads those as html, but in mdx they
+        // are JSX, not the literal text the author meant, so escape them like any other prose.
+        // Authored docs are single-paragraph prose; serialize the first block's phrasing inline (empty -> '').
+        const [block] = fromMarkdown(markdown).children;
+        const phrasing = block?.type === 'paragraph' ? block.children : [];
+        const children: PhrasingContent[] = phrasing.map(node =>
+            node.type === 'html' ? { type: 'text', value: node.value } : node,
+        );
+        return serialize({ type: 'paragraph', children });
+    },
+    escapeChar(value) {
+        return `\\${value}`;
     },
 };
 
 /** Escape characters that would otherwise break a markdown table cell (bare pipes read as column separators). */
 function escapeCell(cell: string): string {
     return cell.replace(/\|/g, char => `\\${char}`);
-}
-
-/** Renders a (possibly nested) list, indenting each level by 4 spaces per markdown's nested-bullet convention. */
-function renderList(type: 'bulleted' | 'numbered', items: readonly ListItem[], depth: number): string {
-    const indent = LIST_INDENT.repeat(depth);
-    return items
-        .map((item, index) => {
-            const marker = type === 'numbered' ? `${index + 1}.` : '-';
-            // leaf, or a node with no children -> a plain line
-            if (typeof item === 'string' || item.children.length === 0) {
-                const content = typeof item === 'string' ? item : item.content;
-                return `${indent}${marker} ${content}`;
-            }
-            return `${indent}${marker} ${item.content}${LIST_LINE_SEPARATOR}${renderList(type, item.children, depth + 1)}`;
-        })
-        .join(LIST_LINE_SEPARATOR);
-}
-
-/** Backtick fence at least `min` long and longer than any backtick run in content, so content cannot close it early. */
-function backtickFence(content: string, min: number): string {
-    const longestRun = Math.max(0, ...(content.match(/`+/g) ?? []).map(run => run.length));
-    return '`'.repeat(Math.max(min, longestRun + 1));
 }

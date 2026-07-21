@@ -52,9 +52,9 @@ describe('markdownRenderer', () => {
         expect(markdown.list('numbered', ['a', 'b'])).toBe('1. a\n2. b');
     });
 
-    it('renders a nested list, indenting children by four spaces', () => {
+    it('renders a nested list, indenting children under their parent marker', () => {
         expect(markdown.list('bulleted', ['top', { content: 'parent', children: ['a', 'b'] }])).toBe(
-            '- top\n- parent\n    - a\n    - b',
+            '- top\n- parent\n  - a\n  - b',
         );
         // a node with no children renders as a plain leaf line
         expect(markdown.list('bulleted', [{ content: 'lonely', children: [] }])).toBe('- lonely');
@@ -67,8 +67,8 @@ describe('markdownRenderer', () => {
         expect(markdown.code('a`b')).toBe('``a`b``');
         // starts/ends with a backtick: fence of 2 plus a stripped space pad
         expect(markdown.code('`x`')).toBe('`` `x` ``');
-        // inner run of 2: fence grows to 3
-        expect(markdown.code('``')).toBe('``` `` ```');
+        // inner run of 2: a 1-backtick fence with space pad already cannot be closed by a run of 2
+        expect(markdown.code('``')).toBe('` `` `');
     });
 
     it('fences code blocks so an inner fence line does not close the block early', () => {
@@ -78,22 +78,32 @@ describe('markdownRenderer', () => {
         expect(markdown.codeBlock('md', '```\nnested\n```')).toBe('````md\n```\nnested\n```\n````');
     });
 
-    it('escapes the mdx-significant characters < and { so output is safe as .md or .mdx', () => {
-        expect(markdown.escape('a < b and {x}')).toBe('a \\< b and \\{x}');
+    it('escapeChar backslashes whatever delimiter it is given - the caller only passes chars that must be escaped', () => {
+        expect(markdown.escapeChar('<')).toBe('\\<');
+        expect(markdown.escapeChar('{')).toBe('\\{');
     });
 
-    it('leaves other characters untouched', () => {
-        expect(markdown.escape('u64 | string')).toBe('u64 | string');
+    it('prose escapes the mdx openers < and { in authored text so output is safe as .md or .mdx', () => {
+        expect(markdown.prose('a < b and {x}')).toBe('a \\< b and \\{x}');
     });
 
-    it('does not escape inside inline code spans, where a backslash would render literally', () => {
-        // prose carries backticked code like `nestedTypeNode<T>`; escaping there leaks a visible `\`
-        expect(markdown.escape('wraps another `nestedTypeNode<T>` until reached')).toBe(
+    it('prose leaves non-significant characters untouched', () => {
+        expect(markdown.prose('u64 | string')).toBe('u64 | string');
+    });
+
+    it('prose keeps code spans intact - a backslash inside one would render literally', () => {
+        // authored prose carries backticked code like `nestedTypeNode<T>`; the span content stays verbatim
+        expect(markdown.prose('wraps another `nestedTypeNode<T>` until reached')).toBe(
             'wraps another `nestedTypeNode<T>` until reached',
         );
     });
 
-    it('escapes outside a code span while leaving the span contents intact', () => {
-        expect(markdown.escape('use {x} with `${root.path}`')).toBe('use \\{x} with `${root.path}`');
+    it('prose escapes outside a code span while leaving the span contents intact', () => {
+        expect(markdown.prose('use {x} with `${root.path}`')).toBe('use \\{x} with `${root.path}`');
+    });
+
+    it('prose escapes tag-shaped tokens - CommonMark reads <T> as html, but in mdx it is JSX, not literal text', () => {
+        // without demoting html back to text these would pass through unescaped and render as broken JSX in .mdx
+        expect(markdown.prose('wraps a <T> and a <Foo>')).toBe('wraps a \\<T> and a \\<Foo>');
     });
 });

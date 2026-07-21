@@ -53,7 +53,7 @@ export function renderNodePage(node: NodeSpec, ctx: RenderCtx): DocPage {
         const row = [
             markup.code(attribute.name),
             typeCell(attribute, markup, linkTo),
-            markup.escape(getFirstDoc(attribute.docs)),
+            markup.prose(getFirstDoc(attribute.docs)),
         ];
         if (isDocChild(attribute.type)) {
             childRows.push(row);
@@ -121,7 +121,7 @@ function renderExample(
     if (!codeBlocks.length) return undefined;
     const parts: (string | undefined)[] = [
         // header
-        markup.heading(3, markup.escape(example.title)),
+        markup.heading(3, markup.prose(example.title)),
         // description
         renderSpecDocs(example.docs, markup),
         // code blocks
@@ -286,7 +286,7 @@ export function renderRootIndexPage(spec: Spec, ctx: RenderCtx): DocPage {
         // header: title
         markup.heading(1, title),
         // description
-        markup.paragraph(markup.escape(description)),
+        markup.paragraph(markup.prose(description)),
         // injection: afterDescription
         ctx.config.inject?.(createInjectContext('afterDescription')),
         // version
@@ -342,10 +342,10 @@ function getFirstDoc(docs?: readonly string[]): string {
 /** Appends a ` - <first doc paragraph>` suffix to a label, or the bare label when there are none. */
 function withBlurb(markup: MarkupRenderer, label: string, docs?: readonly string[]): string {
     const blurb = getFirstDoc(docs);
-    return blurb ? `${label} - ${markup.escape(blurb)}` : label;
+    return blurb ? `${label} - ${markup.prose(blurb)}` : label;
 }
 
 /** Renders a spec `docs` field (a list of prose paragraphs) as a single space-joined paragraph, '' when empty. */
 function renderSpecDocs(docs: readonly string[] | undefined, markup: MarkupRenderer): string {
-    return docs?.length ? markup.paragraph(markup.escape(docs.join(' '))) : '';
+    return docs?.length ? markup.paragraph(markup.prose(docs.join(' '))) : '';
 }
