@@ -1,5 +1,15 @@
 # @codama/spec
 
+## 1.8.1
+
+### Patch Changes
+
+- [#60](https://github.com/codama-idl/spec/pull/60) [`d288313`](https://github.com/codama-idl/spec/commit/d288313a73d5935beb21bb4850f73bfee5424d80) Thanks [@lorisleiva](https://github.com/lorisleiva)! - Document the array serialisation convention: every array attribute is omitted when empty on write and defaults to `[]` when absent on read.
+
+  An absent array and an empty array are semantically identical — both mean "no items". Consumers MUST normalise an absent array to `[]`. This keeps encoded IDLs small (they are often uploaded on-chain) and makes adding or omitting an array attribute a non-breaking change. The `attribute` vs `optionalAttribute` distinction has no effect on how arrays serialise; it only documents intent and governs the optionality of non-array attributes.
+
+  This release is documentation-only: `v1/spec.json` and every published type are unchanged. It records the convention as a versioned contract for the TypeScript and Rust reference implementations to adopt.
+
 ## 1.8.0
 
 ### Minor Changes
