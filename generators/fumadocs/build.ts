@@ -1,4 +1,4 @@
-import { absoluteLinks, generateDocs } from '../../src/docs';
+import { generateDocs, relativeLinks } from '../../src/docs';
 import type { DocFile, DocModel, PathConfig } from '../../src/docs';
 import { getSpec } from '../../src/v1';
 
@@ -24,17 +24,14 @@ export function frontmatter(fields: Record<string, string | undefined>): string 
 
 /**
  * Build the hosted spec model - the single source of generator config, shared by `generate()` and any test.
- * `urlVersion` is the route major version segment (`v1`).
  * `pathConfig` decides file/dir names and the index basename.
+ * Links are relative `.mdx` paths - the docs app's `createRelativeLink` rewrites them to route URLs at render time,
+ * so pages carry no route/version prefix and stay portable across mount points.
  */
-export function buildSpecModel(urlVersion: string, pathConfig: PathConfig): DocModel {
+export function buildSpecModel(pathConfig: PathConfig): DocModel {
     return generateDocs(getSpec(), {
         pathConfig,
-        linkStrategy: absoluteLinks({
-            baseUrl: `/spec/${urlVersion}`,
-            extension: '',
-            indexFileName: pathConfig.indexFileName,
-        }),
+        linkStrategy: relativeLinks('mdx'),
         root: { title: SPEC_TITLE, description: SPEC_DESCRIPTION },
     });
 }

@@ -3,7 +3,7 @@ import { describe, expect, it } from 'vitest';
 import { buildFumadocFiles, buildSpecModel, frontmatter } from '../../generators/fumadocs/build';
 import { HostedDocsPathConfig } from '../../src/docs';
 
-const docModel = buildSpecModel('v1', HostedDocsPathConfig);
+const docModel = buildSpecModel(HostedDocsPathConfig);
 const FILES = buildFumadocFiles(docModel, HostedDocsPathConfig.indexFileName, { root: true, title: 'v1.8.0' });
 const fileAt = (p: string) => FILES.find(file => file.path === p);
 const json = (p: string) => JSON.parse(fileAt(p)!.content);
@@ -45,31 +45,41 @@ describe('buildFumadocFiles', () => {
         expect(meta.pages).toEqual(['!index', '...']);
     });
 
-    it('emits extension-less spec links with no /index suffix', () => {
-        const linkPattern = /\]\((\/spec\/v1[^)]*)\)/g;
+    it('emits relative .mdx links - createRelativeLink rewrites them to route URLs at render time', () => {
+        // internal links are the relative ones (start with ./ or ../); external http(s) links are left alone
+        const linkPattern = /\]\(([^)]+)\)/g;
         for (const file of FILES.filter(f => f.path.endsWith('.mdx'))) {
             for (const match of file.content.matchAll(linkPattern)) {
-                expect(match[1].endsWith('/index'), `bad link ${match[1]} in ${file.path}`).toBe(false);
-                expect(match[1].endsWith('.mdx'), `bad link ${match[1]} in ${file.path}`).toBe(false);
+                const href = match[1];
+                if (href.startsWith('http')) continue;
+                expect(href.startsWith('./') || href.startsWith('../'), `bad link ${href} in ${file.path}`).toBe(true);
+                expect(href.endsWith('.mdx'), `bad link ${href} in ${file.path}`).toBe(true);
             }
         }
     });
 
-    it('every internal spec link resolves to an emitted page URL', () => {
-        const urls = new Set(
-            docModel.pages.map(page => {
-                const s =
-                    page.pathSegments[page.pathSegments.length - 1] === 'index'
-                        ? page.pathSegments.slice(0, -1)
-                        : page.pathSegments;
-                return `/spec/v1${s.length ? `/${s.join('/')}` : ''}`;
-            }),
-        );
-        const linkPattern = /\]\((\/spec\/v1[^)]*)\)/g;
+    it('every relative link resolves to an emitted .mdx file', () => {
+        const emitted = new Set(FILES.filter(f => f.path.endsWith('.mdx')).map(f => f.path));
+        const linkPattern = /\]\(([^)]+)\)/g;
         for (const file of FILES.filter(f => f.path.endsWith('.mdx'))) {
+            const dir = file.path.split('/').slice(0, -1);
             for (const match of file.content.matchAll(linkPattern)) {
-                expect(urls.has(match[1]), `unresolved ${match[1]} in ${file.path}`).toBe(true);
+                const href = match[1];
+                if (href.startsWith('http')) continue;
+                const resolved = resolvePosix(dir, href);
+                expect(emitted.has(resolved), `unresolved ${href} (-> ${resolved}) in ${file.path}`).toBe(true);
             }
         }
     });
 });
+
+/** Resolve a POSIX relative `href` against the directory segments `dir`, returning a slash-joined file path. */
+function resolvePosix(dir: readonly string[], href: string): string {
+    const out = [...dir];
+    for (const part of href.split('/')) {
+        if (part === '.' || part === '') continue;
+        if (part === '..') out.pop();
+        else out.push(part);
+    }
+    return out.join('/');
+}

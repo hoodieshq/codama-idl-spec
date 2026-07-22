@@ -23,7 +23,7 @@ const URL_VERSION = `v${SPEC_VERSION.split('.')[0]}`;
 const VERSION_LABEL = `v${SPEC_VERSION}`;
 
 export async function generate(): Promise<void> {
-    const model = buildSpecModel(URL_VERSION, HostedDocsPathConfig);
+    const model = buildSpecModel(HostedDocsPathConfig);
     // clear only this version's subtree - other versions and handwritten content/docs, content/recipes stay untouched
     const outDir = path.join(REPO_ROOT, 'docs', 'content', 'spec', URL_VERSION);
     await rm(outDir, { recursive: true, force: true });
