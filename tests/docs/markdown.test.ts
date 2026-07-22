@@ -85,4 +85,15 @@ describe('markdownRenderer', () => {
     it('leaves other characters untouched', () => {
         expect(markdown.escape('u64 | string')).toBe('u64 | string');
     });
+
+    it('does not escape inside inline code spans, where a backslash would render literally', () => {
+        // prose carries backticked code like `nestedTypeNode<T>`; escaping there leaks a visible `\`
+        expect(markdown.escape('wraps another `nestedTypeNode<T>` until reached')).toBe(
+            'wraps another `nestedTypeNode<T>` until reached',
+        );
+    });
+
+    it('escapes outside a code span while leaving the span contents intact', () => {
+        expect(markdown.escape('use {x} with `${root.path}`')).toBe('use \\{x} with `${root.path}`');
+    });
 });

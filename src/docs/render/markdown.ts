@@ -50,8 +50,12 @@ export const markdownRenderer: MarkupRenderer = {
     escape(value) {
         // Prefix a backslash to the two mdx-significant chars: `<` opens JSX, `{` opens an expression.
         // This renderer emits prose verbatim (via `paragraph`), so nothing else escapes these for us.
-        // Callers apply this to prose only, never code spans (a backslash renders literally there).
-        return value.replace(/[<{]/g, char => `\\${char}`);
+        // Skip inline code spans: there `<`/`{` are already literal and a backslash would render visibly.
+        // split() captures the code spans, so prose lands on even indices and spans on odd - escape prose only.
+        return value
+            .split(/(`[^`]*`)/)
+            .map((part, i) => (i % 2 === 0 ? part.replace(/[<{]/g, char => `\\${char}`) : part))
+            .join('');
     },
 };
 
