@@ -22,7 +22,7 @@ A concrete value of a defined enum: a variant identifier plus an optional payloa
 
 ### Create an enum value node from an enum, a variant, and an optional value
 
-```typescript
+```typescript tab="TypeScript"
 const node = enumValueNode('myEnum', 'myVariant');
 const nodeWithExplicitEnum = enumValueNode(definedTypeLinkNode('myEnum'), 'myVariant');
 

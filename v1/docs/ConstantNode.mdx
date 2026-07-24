@@ -23,19 +23,19 @@ A named constant exposed by the program: a typed value associated with a name.
 
 ### Numeric Constant
 
-```typescript
+```typescript tab="TypeScript"
 const node = constantNode('maxSize', numberTypeNode('u32'), numberValueNode(100));
 ```
 
 ### Bytes Constant
 
-```typescript
+```typescript tab="TypeScript"
 const node = constantNode('seedPrefix', bytesTypeNode(), bytesValueNode('base16', '74657374'));
 ```
 
 ### With Documentation
 
-```typescript
+```typescript tab="TypeScript"
 const node = constantNode('maxItems', numberTypeNode('u64'), numberValueNode(1000), [
     'The maximum number of items allowed.',
 ]);

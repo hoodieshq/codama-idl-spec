@@ -20,12 +20,12 @@ A count strategy where the number of items is read from a numeric prefix.
 
 ### Create a prefixed count node from a number node
 
-```typescript
+```typescript tab="TypeScript"
 const node = prefixedCountNode(numberTypeNode('u32'));
 ```
 
 ### A variable array of public keys prefixed with a u32
 
-```typescript
+```typescript tab="TypeScript"
 arrayTypeNode(publicKeyTypeNode(), prefixedCountNode(numberTypeNode('u32')));
 ```

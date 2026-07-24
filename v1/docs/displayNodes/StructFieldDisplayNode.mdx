@@ -23,7 +23,7 @@ Display metadata for a named member: its label, whether it is shown in the fallb
 
 ### Relabelling an instruction argument
 
-```typescript
+```typescript tab="TypeScript"
 instructionArgumentNode({
     name: 'amount',
     type: numberTypeNode('u64'),
@@ -33,7 +33,7 @@ instructionArgumentNode({
 
 ### Hiding a discriminator argument from the fallback list
 
-```typescript
+```typescript tab="TypeScript"
 instructionArgumentNode({
     name: 'discriminator',
     type: numberTypeNode('u8'),
@@ -43,7 +43,7 @@ instructionArgumentNode({
 
 ### Flattening a nested struct into its parent with a label prefix
 
-```typescript
+```typescript tab="TypeScript"
 structFieldTypeNode({
     name: 'config',
     type: definedTypeLinkNode('config'),

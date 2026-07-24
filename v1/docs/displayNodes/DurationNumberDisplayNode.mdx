@@ -15,7 +15,7 @@ Display metadata that presents a number as an elapsed duration. The underlying v
 
 ### A duration already in seconds
 
-```typescript
+```typescript tab="TypeScript"
 numberTypeNode('u32', 'le', { display: durationNumberDisplayNode({}) });
 
 // 3600 => "01:00:00"
@@ -23,7 +23,7 @@ numberTypeNode('u32', 'le', { display: durationNumberDisplayNode({}) });
 
 ### A duration in milliseconds scaled back to seconds
 
-```typescript
+```typescript tab="TypeScript"
 numberTypeNode('u64', 'le', { display: durationNumberDisplayNode({ ticksPerSecond: 1000 }) });
 
 // 90_000 => "00:01:30"

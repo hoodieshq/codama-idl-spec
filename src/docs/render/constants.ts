@@ -1,4 +1,5 @@
 /** Render-time string constants shared across page renderers - titles, defaults, and block delimiters in one place. */
+import type { CodeLanguage } from '../../api';
 import type { CategoryGroup } from '../types';
 
 /** Blank line between rendered blocks (headings, tables, paragraphs). */
@@ -16,6 +17,12 @@ export const GROUP_TITLES: Record<CategoryGroup['kind'], string> = {
     union: 'Unions',
     nestedUnion: 'Nested unions',
     enumeration: 'Enumerations',
+};
+
+/** Human-facing tab labels per language - used as the `tab="<label>"` fence meta so Fumadocs groups blocks into tabs. */
+export const LANGUAGE_LABELS: Record<CodeLanguage, string> = {
+    typescript: 'TypeScript',
+    rust: 'Rust',
 };
 
 /** Indentation unit for one list-nesting level (markdown convention: 4 spaces). */

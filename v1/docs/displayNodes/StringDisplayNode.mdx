@@ -16,7 +16,7 @@ Display metadata for a string value. The string's wire encoding is carried by `s
 
 ### Displaying the whole string
 
-```typescript
+```typescript tab="TypeScript"
 stringTypeNode('utf8', { display: stringDisplayNode({}) });
 
 // "SOLANA" => "SOLANA"
@@ -24,7 +24,7 @@ stringTypeNode('utf8', { display: stringDisplayNode({}) });
 
 ### Displaying a leading slice
 
-```typescript
+```typescript tab="TypeScript"
 stringTypeNode('utf8', { display: stringDisplayNode({ sliceStart: 0, sliceEnd: 3 }) });
 
 // "SOLANA" => "SOL"

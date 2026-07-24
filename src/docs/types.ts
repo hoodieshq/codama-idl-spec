@@ -17,6 +17,10 @@ export type DocRefKey = `${DocRef['kind']}:${string}`;
 /** A single rendered page. */
 export interface DocPage {
     readonly ref: DocRef;
+    /** Human-facing page title - PascalCase entity name, or the root/category title. */
+    readonly title: string;
+    /** Short one-line summary - the entity's first doc paragraph, used for sidebar and SEO metadata. */
+    readonly description?: string;
     /** Example: ['pdaSeedNodes','ConstantPdaSeedNode']  */
     readonly pathSegments: readonly string[];
     /** The rendered body with resolved links */
@@ -69,7 +73,8 @@ export interface MarkupRenderer {
     heading(level: number, content: string): string;
     paragraph(content: string): string;
     table(head: readonly string[], rows: readonly (readonly string[])[]): string; // padded GitHub-style
-    codeBlock(language: string, code: string): string;
+    /** `meta` is appended to the fence info string after the language (e.g. `tab="TypeScript"`). */
+    codeBlock(language: string, code: string, meta?: string): string;
     list(type: 'bulleted' | 'numbered', items: readonly ListItem[]): string;
     code(value: string): string;
     link(text: string, href: string): string;
@@ -82,10 +87,4 @@ export interface MarkupRenderer {
      */
     prose(value: string): string;
     escapeChar(value: string): string;
-}
-
-/** A consumer-side emitted file - contains file path and string content. */
-export interface DocFile {
-    readonly path: string;
-    readonly content: string;
 }

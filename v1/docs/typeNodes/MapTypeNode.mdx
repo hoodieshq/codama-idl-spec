@@ -22,13 +22,13 @@ A keyed map. The key and value types are described by their respective type node
 
 ### Create a map type node from a key type, a value type, and a count node
 
-```typescript
+```typescript tab="TypeScript"
 const node = mapTypeNode(publicKeyTypeNode(), numberTypeNode('u32'), prefixedCountNode(numberTypeNode('u32')));
 ```
 
 ### A histogram that counts letters
 
-```typescript
+```typescript tab="TypeScript"
 mapTypeNode(
     fixedSizeTypeNode(stringTypeNode('utf8'), 1), // Key: Single UTF-8 character.
     numberTypeNode('u16'), // Value: 16-bit unsigned integer.

@@ -22,18 +22,18 @@ A byte-size delta applied when computing rent or buffer size — typically used 
 
 ### A byte delta that represents a new account
 
-```typescript
+```typescript tab="TypeScript"
 instructionByteDeltaNode(accountLinkNode('token'));
 ```
 
 ### A byte delta that represents an account deletion
 
-```typescript
+```typescript tab="TypeScript"
 instructionByteDeltaNode(accountLinkNode('token'), { subtract: true });
 ```
 
 ### A byte delta that uses an argument value to increase the space of an account
 
-```typescript
+```typescript tab="TypeScript"
 instructionByteDeltaNode(argumentValueNode('additionalSpace'), { withHeader: false });
 ```

@@ -21,7 +21,7 @@ Wraps another type with a numeric prefix indicating the byte length of the wrapp
 
 ### A UTF-8 string prefixed with a u16 size
 
-```typescript
+```typescript tab="TypeScript"
 sizePrefixTypeNode(stringTypeNode('utf8'), numberTypeNode('u16'));
 
 // ""      => 0x0000

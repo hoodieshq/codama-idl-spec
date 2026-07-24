@@ -16,7 +16,7 @@ Display metadata for an instruction: a short intent label and an interpolated se
 
 ### An intent label plus an interpolated sentence
 
-```typescript
+```typescript tab="TypeScript"
 instructionNode({
     name: 'transferChecked',
     display: instructionDisplayNode({
@@ -32,7 +32,7 @@ instructionNode({
 
 ### An intent label only, letting the renderer build the fallback list
 
-```typescript
+```typescript tab="TypeScript"
 instructionNode({
     name: 'closeAccount',
     display: instructionDisplayNode({ intent: 'Close Account' }),

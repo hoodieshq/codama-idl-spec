@@ -21,7 +21,7 @@ The lifecycle stage of an instruction (draft, live, deprecated, archived) with a
 
 ### A live instruction (no status needed)
 
-```typescript
+```typescript tab="TypeScript"
 instructionNode({
     name: 'transfer',
     accounts: [...],
@@ -31,7 +31,7 @@ instructionNode({
 
 ### A deprecated instruction
 
-```typescript
+```typescript tab="TypeScript"
 instructionNode({
     name: 'oldTransfer',
     status: instructionStatusNode('deprecated', 'Use the `transfer` instruction instead. This will be removed in v3.0.0.'),
@@ -42,7 +42,7 @@ instructionNode({
 
 ### An archived instruction
 
-```typescript
+```typescript tab="TypeScript"
 instructionNode({
     name: 'legacyTransfer',
     status: instructionStatusNode('archived', 'This instruction was removed in v2.0.0. It is kept here for historical parsing.'),
@@ -53,7 +53,7 @@ instructionNode({
 
 ### A draft instruction
 
-```typescript
+```typescript tab="TypeScript"
 instructionNode({
     name: 'experimentalFeature',
     status: instructionStatusNode('draft', 'This instruction is under development and may change.'),
@@ -64,7 +64,7 @@ instructionNode({
 
 ### Status without a message
 
-```typescript
+```typescript tab="TypeScript"
 instructionNode({
     name: 'someInstruction',
     status: instructionStatusNode('deprecated'),

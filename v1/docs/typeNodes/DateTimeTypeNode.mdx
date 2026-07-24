@@ -20,13 +20,13 @@ A timestamp encoded as a number, typically seconds since the Unix epoch. The wra
 
 ### Create a date time type node from a number type node
 
-```typescript
+```typescript tab="TypeScript"
 const node = dateTimeTypeNode(numberTypeNode('u64'));
 ```
 
 ### u64 unix datetime
 
-```typescript
+```typescript tab="TypeScript"
 dateTimeTypeNode(numberTypeNode('u64'));
 
 // 2024-06-27T14:57:56Z => 0xF47D7D6600000000

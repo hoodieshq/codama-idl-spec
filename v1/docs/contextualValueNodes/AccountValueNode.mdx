@@ -15,13 +15,13 @@ Refers to a named account in the surrounding instruction.
 
 ### Create an account value node from an account name
 
-```typescript
+```typescript tab="TypeScript"
 const node = accountValueNode('mint');
 ```
 
 ### An instruction account defaulting to another account
 
-```typescript
+```typescript tab="TypeScript"
 instructionNode({
     name: 'mint',
     accounts: [

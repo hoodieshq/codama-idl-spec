@@ -15,13 +15,13 @@ Refers to the bump seed of a named PDA-derived account in the surrounding instru
 
 ### Create an account bump value node from an account name
 
-```typescript
+```typescript tab="TypeScript"
 const node = accountBumpValueNode('associatedTokenAccount');
 ```
 
 ### An instruction argument defaulting to the bump derivation of an instruction account
 
-```typescript
+```typescript tab="TypeScript"
 instructionNode({
     name: 'transfer',
     accounts: [

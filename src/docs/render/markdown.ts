@@ -36,10 +36,12 @@ export const markdownRenderer: MarkupRenderer = {
     list(type, items) {
         return renderList(type, items, 0);
     },
-    codeBlock(language, code) {
+    codeBlock(language, code, meta) {
         // block fence must be >= 3 backticks and longer than any run in code
         const fence = backtickFence(code, 3);
-        return `${fence}${language}\n${code}\n${fence}`;
+        // `meta` appends fence info string after the language (e.g. `tab="TypeScript"` for Fumadocs code tabs)
+        const info = meta ? `${language} ${meta}` : language;
+        return `${fence}${info}\n${code}\n${fence}`;
     },
     table(head, rows) {
         if (rows.some(row => row.length !== head.length)) {

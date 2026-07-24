@@ -16,7 +16,7 @@ Display metadata for an enum variant: its label and whether to hide its inner pa
 
 ### Relabelling a struct variant
 
-```typescript
+```typescript tab="TypeScript"
 enumStructVariantTypeNode(
     'buy',
     structTypeNode([structFieldTypeNode({ name: 'amount', type: numberTypeNode('u64') })]),
@@ -27,7 +27,7 @@ enumStructVariantTypeNode(
 
 ### Hiding a tuple payload so only the label is shown
 
-```typescript
+```typescript tab="TypeScript"
 enumTupleVariantTypeNode(
     'increment',
     tupleTypeNode([numberTypeNode('u64')]),

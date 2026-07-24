@@ -21,7 +21,7 @@ Display metadata that presents a number as a scaled amount with an optional unit
 
 ### A fixed 9-decimal SOL amount
 
-```typescript
+```typescript tab="TypeScript"
 numberTypeNode('u64', 'le', {
     display: amountNumberDisplayNode({ decimals: numberValueNode(9), unit: stringValueNode('SOL') }),
 });
@@ -31,7 +31,7 @@ numberTypeNode('u64', 'le', {
 
 ### Decimals and unit injected from surrounding account state
 
-```typescript
+```typescript tab="TypeScript"
 numberTypeNode('u64', 'le', {
     display: amountNumberDisplayNode({
         decimals: injectedValueNode({ key: 'decimals' }),

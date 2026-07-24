@@ -21,13 +21,13 @@ A homogeneous list of items. The item type is defined by `item`; the length is d
 
 ### Create an array type node from a type node and a count node
 
-```typescript
+```typescript tab="TypeScript"
 const node = arrayTypeNode(publicKeyTypeNode(), prefixedCountNode(numberTypeNode('u32')));
 ```
 
 ### u32 prefixed array of u8 numbers
 
-```typescript
+```typescript tab="TypeScript"
 arrayTypeNode(numberTypeNode('u8'), prefixedCountNode(numberTypeNode('u32')));
 
 // [1, 2, 3] => 0x03000000010203

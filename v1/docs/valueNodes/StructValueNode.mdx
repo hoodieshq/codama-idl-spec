@@ -20,7 +20,7 @@ A concrete struct value: a list of named field values.
 
 ### Create a struct value node from field value nodes
 
-```typescript
+```typescript tab="TypeScript"
 const node = structValueNode([
     structFieldValueNode('name', stringValueNode('Alice')),
     structFieldValueNode('age', numberValueNode(42)),

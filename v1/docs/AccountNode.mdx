@@ -25,7 +25,7 @@ An on-chain account: its name, data structure, optional fixed size, optional PDA
 
 ### A fixed-size account
 
-```typescript
+```typescript tab="TypeScript"
 const node = accountNode({
     name: 'token',
     data: structTypeNode([
@@ -40,7 +40,7 @@ const node = accountNode({
 
 ### An account with a linked PDA
 
-```typescript
+```typescript tab="TypeScript"
 programNode({
     name: 'myProgram',
     accounts: [

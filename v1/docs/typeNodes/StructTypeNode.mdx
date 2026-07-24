@@ -20,7 +20,7 @@ A composite type made of an ordered list of named fields. Fields are encoded and
 
 ### A struct storing a person's name and age
 
-```typescript
+```typescript tab="TypeScript"
 structTypeNode([
     structFieldTypeNode({ name: 'name', type: fixedSizeTypeNode(stringTypeNode('utf8'), 10) }),
     structFieldTypeNode({ name: 'age', type: numberTypeNode('u8') }),

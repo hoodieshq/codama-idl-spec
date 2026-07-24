@@ -70,11 +70,13 @@ The `attribute` vs `optionalAttribute` distinction therefore has **no effect on 
 ```
 src/                       # package source (the @codama/spec public surface)
 tests/                     # package tests
+docs/                      # documentation hosted Next.js app
 generators/                # internal codegen orchestrator + per-target generators
   index.ts                 # runs every registered generator sequentially
   json-spec/               # emits v<n>/spec.json
   json-schema/             # emits v<n>/schema.json (stub)
   docs/                    # emits v<n>/docs/ (uses the internal src/docs generator)
+    fumadocs/              # emits docs/content/spec/<major>/ from the same doc model
 v1/                        # generated artifacts mirroring the @codama/spec/v1 surface
   spec.json
   schema.json

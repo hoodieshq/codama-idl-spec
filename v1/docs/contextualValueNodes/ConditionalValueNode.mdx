@@ -23,7 +23,7 @@ A branching contextual value. The condition resolves to a value at instruction t
 
 ### Create a conditional value node from an input object
 
-```typescript
+```typescript tab="TypeScript"
 const node = conditionalValueNode({
     condition: argumentValueNode('amount'),
     value: numberValueNode(0),
@@ -34,7 +34,7 @@ const node = conditionalValueNode({
 
 ### An instruction account that defaults to another account if a condition is met
 
-```typescript
+```typescript tab="TypeScript"
 instructionNode({
     name: 'transfer',
     accounts: [

@@ -33,7 +33,7 @@ A program instruction: its accounts, arguments, byte-delta hints, discriminators
 
 ### An instruction with a u8 discriminator
 
-```typescript
+```typescript tab="TypeScript"
 instructionNode({
     name: 'increment',
     accounts: [
@@ -53,7 +53,7 @@ instructionNode({
 
 ### An instruction that creates a new account
 
-```typescript
+```typescript tab="TypeScript"
 instructionNode({
     name: 'createCounter',
     accounts: [
@@ -66,7 +66,7 @@ instructionNode({
 
 ### An instruction with omitted optional accounts
 
-```typescript
+```typescript tab="TypeScript"
 instructionNode({
     name: 'initialize',
     accounts: [
@@ -80,7 +80,7 @@ instructionNode({
 
 ### An instruction with remaining signers
 
-```typescript
+```typescript tab="TypeScript"
 instructionNode({
     name: 'multisigIncrement',
     accounts: [instructionAccountNode({ name: 'counter', isWritable: true, isSigner: false })],
@@ -90,7 +90,7 @@ instructionNode({
 
 ### An instruction with nested versioned instructions
 
-```typescript
+```typescript tab="TypeScript"
 instructionNode({
     name: 'increment',
     accounts: [
@@ -137,7 +137,7 @@ instructionNode({
 
 ### A deprecated instruction
 
-```typescript
+```typescript tab="TypeScript"
 instructionNode({
     name: 'oldIncrement',
     status: instructionStatusNode(
@@ -151,7 +151,7 @@ instructionNode({
 
 ### An archived instruction
 
-```typescript
+```typescript tab="TypeScript"
 instructionNode({
     name: 'legacyTransfer',
     status: instructionStatusNode(
@@ -168,7 +168,7 @@ instructionNode({
 
 ### A draft instruction
 
-```typescript
+```typescript tab="TypeScript"
 instructionNode({
     name: 'experimentalFeature',
     status: instructionStatusNode('draft', 'This instruction is under development and may change.'),

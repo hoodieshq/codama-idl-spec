@@ -15,13 +15,13 @@ Identifies a node by its expected total byte size.
 
 ### Create a size discriminator node from a size
 
-```typescript
+```typescript tab="TypeScript"
 const node = sizeDiscriminatorNode(165);
 ```
 
 ### An account distinguished by its size being equal to 42
 
-```typescript
+```typescript tab="TypeScript"
 accountNode({
     discriminators: [sizeDiscriminatorNode(42)],
     // ...
@@ -30,7 +30,7 @@ accountNode({
 
 ### An instruction distinguished by its size being equal to 42
 
-```typescript
+```typescript tab="TypeScript"
 instructionNode({
     discriminators: [sizeDiscriminatorNode(42)],
     // ...

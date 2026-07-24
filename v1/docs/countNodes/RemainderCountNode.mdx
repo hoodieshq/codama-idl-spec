@@ -14,12 +14,12 @@ A count strategy where items are read until the buffer is exhausted.
 
 ### Create a remainder count node
 
-```typescript
+```typescript tab="TypeScript"
 const node = remainderCountNode();
 ```
 
 ### A remainder array of public keys
 
-```typescript
+```typescript tab="TypeScript"
 arrayTypeNode(publicKeyTypeNode(), remainderCountNode());
 ```

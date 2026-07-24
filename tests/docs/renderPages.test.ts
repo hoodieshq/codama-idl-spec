@@ -1,10 +1,10 @@
 import { describe, expect, it } from 'vitest';
 
 import type { EnumerationSpec, NodeSpec } from '../../src/api';
-import type { DocRef, NavRegistry } from '../../src/docs/types';
 import { markdownRenderer } from '../../src/docs/render/markdown';
 import type { RenderCtx } from '../../src/docs/render/renderPages';
 import { renderEnumPage, renderNodePage } from '../../src/docs/render/renderPages';
+import type { DocRef, NavRegistry } from '../../src/docs/types';
 
 function makeCtx(): RenderCtx {
     const registry: NavRegistry = {
@@ -78,6 +78,9 @@ describe('renderNodePage examples', () => {
         expect(page.content).toContain('### a u32 USD amount');
         expect(page.content).toContain("amountTypeNode(numberTypeNode('u32'), 2, 'USD');");
         expect(page.content).toContain('amount_type_node(number_type_node(U32), 2, "USD");');
+        // each block carries a `tab="<Label>"` fence meta so Fumadocs groups them into a language tab switcher
+        expect(page.content).toContain('```typescript tab="TypeScript"');
+        expect(page.content).toContain('```rust tab="Rust"');
     });
 
     it('omits an example that carries no code block, rather than emitting a bare heading', () => {

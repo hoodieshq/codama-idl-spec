@@ -21,7 +21,7 @@ Prefixes another type with a list of constant values that are written and read b
 
 ### Create a hidden prefix type node from a type node and constant value nodes
 
-```typescript
+```typescript tab="TypeScript"
 const node = hiddenPrefixTypeNode(numberTypeNode('u32'), [
     constantValueNode(bytesTypeNode(), bytesValueNode('base16', 'ffff')),
 ]);
@@ -29,7 +29,7 @@ const node = hiddenPrefixTypeNode(numberTypeNode('u32'), [
 
 ### A number prefixed with 0xFFFF
 
-```typescript
+```typescript tab="TypeScript"
 hiddenPrefixTypeNode(numberTypeNode('u32'), [constantValueNode(bytesTypeNode(), bytesValueNode('base16', 'ffff'))]);
 
 // 42 => 0xFFFF2A000000
@@ -37,7 +37,7 @@ hiddenPrefixTypeNode(numberTypeNode('u32'), [constantValueNode(bytesTypeNode(), 
 
 ### A fixed UTF-8 string prefixed with "Hello"
 
-```typescript
+```typescript tab="TypeScript"
 hiddenPrefixTypeNode(fixedSizeTypeNode(stringTypeNode('utf8'), 10), [
     constantValueNode(stringTypeNode('utf8'), stringValueNode('Hello')),
 ]);

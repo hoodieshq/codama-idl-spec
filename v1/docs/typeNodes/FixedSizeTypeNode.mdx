@@ -21,13 +21,13 @@ Wraps another type and asserts a fixed total byte size. Padding or truncation is
 
 ### Create a fixed size type node from a type node and a byte length
 
-```typescript
+```typescript tab="TypeScript"
 const node = fixedSizeTypeNode(stringTypeNode('utf8'), 32);
 ```
 
 ### Fixed UTF-8 strings
 
-```typescript
+```typescript tab="TypeScript"
 fixedSizeTypeNode(stringTypeNode('utf8'), 10);
 
 // Hello => 0x48656C6C6F0000000000
@@ -35,7 +35,7 @@ fixedSizeTypeNode(stringTypeNode('utf8'), 10);
 
 ### Fixed byte arrays
 
-```typescript
+```typescript tab="TypeScript"
 fixedSizeTypeNode(bytesTypeNode(), 4);
 
 // [1, 2]          => 0x01020000

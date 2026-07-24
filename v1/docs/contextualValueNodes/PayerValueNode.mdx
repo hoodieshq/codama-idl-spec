@@ -14,13 +14,13 @@ Refers to the wallet paying for the surrounding transaction.
 
 ### Create a payer value node
 
-```typescript
+```typescript tab="TypeScript"
 const node = payerValueNode();
 ```
 
 ### An instruction account defaulting to the payer value
 
-```typescript
+```typescript tab="TypeScript"
 instructionNode({
     name: 'transfer',
     accounts: [

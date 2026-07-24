@@ -23,7 +23,7 @@ A program event: its data shape and optional discriminators used to identify it 
 
 ### An event with a struct payload
 
-```typescript
+```typescript tab="TypeScript"
 eventNode({
     name: 'transferEvent',
     data: structTypeNode([
@@ -35,7 +35,7 @@ eventNode({
 
 ### An event with a hidden prefix discriminator
 
-```typescript
+```typescript tab="TypeScript"
 eventNode({
     name: 'transferEvent',
     data: hiddenPrefixTypeNode(structTypeNode([structFieldTypeNode({ name: 'amount', type: numberTypeNode('u64') })]), [

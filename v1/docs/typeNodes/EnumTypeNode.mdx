@@ -21,7 +21,7 @@ A tagged union: a numeric discriminator followed by one of several variant paylo
 
 ### Enum with u8 discriminator
 
-```typescript
+```typescript tab="TypeScript"
 enumTypeNode([
     enumEmptyVariantTypeNode('flip'),
     enumTupleVariantTypeNode('rotate', tupleTypeNode([numberTypeNode('u32')])),

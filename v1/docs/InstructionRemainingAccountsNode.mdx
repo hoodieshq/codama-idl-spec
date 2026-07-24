@@ -25,7 +25,7 @@ A "remaining accounts" slot in an instruction — a variable-length tail of acco
 
 ### Optional remaining signers
 
-```typescript
+```typescript tab="TypeScript"
 instructionRemainingAccountsNode(argumentValueNode('authorities'), {
     isSigner: true,
     isOptional: true,
@@ -34,7 +34,7 @@ instructionRemainingAccountsNode(argumentValueNode('authorities'), {
 
 ### Remaining accounts that may or may not be signers
 
-```typescript
+```typescript tab="TypeScript"
 instructionRemainingAccountsNode(argumentValueNode('authorities'), {
     isSigner: 'either',
 });
@@ -42,7 +42,7 @@ instructionRemainingAccountsNode(argumentValueNode('authorities'), {
 
 ### Remaining accounts using a resolver
 
-```typescript
+```typescript tab="TypeScript"
 instructionRemainingAccountsNode(
     resolverValueNode('resolveTransferRemainingAccounts', {
         docs: ['Provide authorities as remaining accounts if and only if the asset has a multisig set up.'],

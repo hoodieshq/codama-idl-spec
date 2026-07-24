@@ -15,7 +15,7 @@ Display metadata that presents a number as a point in time. The underlying value
 
 ### A Unix timestamp already in seconds
 
-```typescript
+```typescript tab="TypeScript"
 numberTypeNode('i64', 'le', { display: dateTimeNumberDisplayNode({}) });
 
 // 1_761_365_183 => "2025-10-25T04:06:23.000Z"
@@ -23,7 +23,7 @@ numberTypeNode('i64', 'le', { display: dateTimeNumberDisplayNode({}) });
 
 ### A millisecond timestamp scaled back to seconds
 
-```typescript
+```typescript tab="TypeScript"
 numberTypeNode('i64', 'le', { display: dateTimeNumberDisplayNode({ ticksPerSecond: 1000 }) });
 
 // 1_761_365_183_000 => "2025-10-25T04:06:23.000Z"

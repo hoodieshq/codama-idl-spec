@@ -14,13 +14,13 @@ Refers to the wallet identity providing the instruction context.
 
 ### Create an identity value node
 
-```typescript
+```typescript tab="TypeScript"
 const node = identityValueNode();
 ```
 
 ### An instruction account defaulting to the identity value
 
-```typescript
+```typescript tab="TypeScript"
 instructionNode({
     name: 'transfer',
     accounts: [

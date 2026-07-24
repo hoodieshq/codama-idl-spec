@@ -16,13 +16,13 @@ Identifies a node by the value of a named field at a known byte offset.
 
 ### Create a field discriminator node from a field name and an optional offset
 
-```typescript
+```typescript tab="TypeScript"
 const node = fieldDiscriminatorNode('accountState', 64);
 ```
 
 ### An account distinguished by a u32 field at offset 0
 
-```typescript
+```typescript tab="TypeScript"
 accountNode({
     data: structTypeNode([
         structFieldTypeNode({
@@ -40,7 +40,7 @@ accountNode({
 
 ### An instruction distinguished by an 8-byte argument at offset 0
 
-```typescript
+```typescript tab="TypeScript"
 instructionNode({
     arguments: [
         instructionArgumentNode({
